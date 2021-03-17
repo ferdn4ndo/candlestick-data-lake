@@ -18,34 +18,33 @@ Attributes:
 * close
 * volume
 * timestamp
-* dataview_id
-* created_at
-
-### Dataview
-
-Attributes:
-
-* id
 * currency_pair_id
-* credential_id
-* periodicity
+* created_at
 
 ### CurrencyPair
 
 Attributes:
 
 * id
-* currency_a
-* currency_b
+* exchange_id
+* currency_a_id
+* currency_b_id
 * symbol
 
-### Credential
+### Exchange
 
 Attributes:
 
 * id
-* token
-* exchange (must be an implementation of 'ExchangeService')
+* code (must be somehow identified inside the implementations of 'ExchangeService')
+* name
+
+### Currency
+
+* id
+* symbol
+* name
+* precision
 
 ## Services
 
