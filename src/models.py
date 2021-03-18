@@ -1,7 +1,8 @@
 import datetime
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, BigInteger, DECIMAL
+from sqlalchemy import Column, Enum, Integer, String, DateTime, ForeignKey, BigInteger, DECIMAL
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
+from markets import Markets
 
 Base = declarative_base()
 
@@ -41,6 +42,7 @@ class CurrencyPair(Base):
     currency_a_id = Column(Integer, ForeignKey('currency.id'))
     currency_b_id = Column(Integer, ForeignKey('currency.id'))
     symbol = Column(String(10), nullable=False, unique=True)
+    market = Column(String(10), Enum(Markets))
 
     exchange = relationship("Exchange")
     currency_a = relationship("Currency", foreign_keys=[currency_a_id])
