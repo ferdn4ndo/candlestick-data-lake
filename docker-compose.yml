@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  db:
+    container_name: csdl-db
+    image: mysql:8.0.16
+    env_file:
+      - .env
+    volumes:
+      - csdl-db-volume:/var/lib/mysql
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+
+  app:
+    container_name: csdl-app
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./src:/usr/src/app
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+volumes:
+    csdl-db-volume:
