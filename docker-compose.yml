@@ -3,7 +3,7 @@ version: '3.4'
 services:
   db:
     container_name: csdl-db
-    image: mysql:8.0.16
+    image: mariadb:10.5.9
     env_file:
       - .env
     volumes:
@@ -26,6 +26,8 @@ services:
       - "8888:8888"
     volumes:
       - ./src:/usr/src/app
+      - ./container/entrypoint.dev.sh:/usr/src/app/entrypoint.dev.sh
+    command: "/usr/src/app/entrypoint.dev.sh"
     depends_on:
       - db
     stdin_open: true
