@@ -6,17 +6,11 @@ from markets import Markets
 
 Base = declarative_base()
 
-# class Dummy(Base):
-#    __tablename__ = "dummy"
-#    id = Column(Integer, primary_key=True, index=True)
-#    dummy = Column(String(250),)
-
-
 class Currency(Base):
     __tablename__ = "currency"
 
     id = Column(Integer, primary_key=True, index=True)
-    symbol = Column(String(4), nullable=False, unique=True)
+    symbol = Column(String(10), nullable=False, unique=True)
     name = Column(String(20), nullable=False)
     precision = Column(Integer)
 
@@ -41,7 +35,7 @@ class CurrencyPair(Base):
     exchange_id = Column(Integer, ForeignKey('exchange.id'))
     currency_a_id = Column(Integer, ForeignKey('currency.id'))
     currency_b_id = Column(Integer, ForeignKey('currency.id'))
-    symbol = Column(String(10), nullable=False, unique=True)
+    symbol = Column(String(20), nullable=False, unique=True)
     market = Column(String(10), Enum(Markets))
 
     exchange = relationship("Exchange")
