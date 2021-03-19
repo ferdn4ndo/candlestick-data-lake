@@ -73,13 +73,13 @@ class Candlestick(Base):
     __tablename__ = "candlestick"
 
     id = Column(Integer, primary_key=True, index=True)
+    currency_pair_id = Column(Integer, ForeignKey("currency_pair.id"))
     open = Column(DECIMAL(precision=16, scale=8), nullable=False)
     high = Column(DECIMAL(precision=16, scale=8), nullable=False)
     low = Column(DECIMAL(precision=16, scale=8), nullable=False)
     close = Column(DECIMAL(precision=16, scale=8), nullable=False)
     volume = Column(DECIMAL(precision=16, scale=8), nullable=False)
     timestamp = Column(BigInteger, nullable=False)
-    currency_pair_id = Column(Integer, ForeignKey("currency_pair.id"))
 
     currency_pair = relationship("CurrencyPair")
 
