@@ -1,5 +1,9 @@
+import os
+
 import tornado.ioloop
 import tornado.web
+
+from tornado_sqlalchemy import SQLAlchemy
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -11,7 +15,8 @@ def make_app():
     return tornado.web.Application(
         [
             (r"/", MainHandler),
-        ]
+        ],
+        db=SQLAlchemy(os.getenv('DATABASE_URL'))
     )
 
 

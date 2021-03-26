@@ -1,8 +1,10 @@
 FROM python:3.9.1-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src
 
 EXPOSE 8888
+
+RUN mkdir ./app
 
 RUN apk add --no-cache \
         mariadb-dev \
@@ -11,11 +13,13 @@ RUN apk add --no-cache \
         libffi-dev
 
 COPY ./src/requirements.txt .
+COPY ./src/requirements.dev.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-COPY ./src/ .
-COPY ./container/entrypoint.dev.sh .
-COPY ./container/entrypoint.sh .
+COPY ./src/entrypoint.dev.sh .
+COPY ./src/entrypoint.sh .
 RUN chmod +x entrypoint.dev.sh entrypoint.sh
 
-CMD ["python", "main.py"]
+WORKDIR /usr/src/app
+
+CMD ["entrypoint.py"]

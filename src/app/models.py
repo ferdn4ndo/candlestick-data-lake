@@ -1,4 +1,6 @@
 import datetime
+import os
+
 from sqlalchemy import (
     Column,
     Enum,
@@ -10,13 +12,14 @@ from sqlalchemy import (
     DECIMAL,
 )
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.declarative import declarative_base
+from tornado_sqlalchemy import SQLAlchemy
+
 from enums import Markets
 
-Base = declarative_base()
+db = SQLAlchemy(url=os.getenv('DATABASE_URL'))
 
 
-class Currency(Base):
+class Currency(db.Model):
     __tablename__ = "currency"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -32,7 +35,7 @@ class Currency(Base):
     )
 
 
-class Exchange(Base):
+class Exchange(db.Model):
     __tablename__ = "exchange"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -47,7 +50,7 @@ class Exchange(Base):
     )
 
 
-class CurrencyPair(Base):
+class CurrencyPair(db.Model):
     __tablename__ = "currency_pair"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -69,7 +72,7 @@ class CurrencyPair(Base):
     )
 
 
-class Candlestick(Base):
+class Candlestick(db.Model):
     __tablename__ = "candlestick"
 
     id = Column(Integer, primary_key=True, index=True)
