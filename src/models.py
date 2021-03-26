@@ -25,7 +25,7 @@ class Currency(Base):
     precision = Column(Integer)
 
     created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
-    upated_at = Column(
+    updated_at = Column(
         DateTime(timezone=True),
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
@@ -40,7 +40,7 @@ class Exchange(Base):
     name = Column(String(20), nullable=False)
 
     created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
-    upated_at = Column(
+    updated_at = Column(
         DateTime(timezone=True),
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
@@ -62,7 +62,7 @@ class CurrencyPair(Base):
     currency_b = relationship("Currency", foreign_keys=[currency_b_id])
 
     created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
-    upated_at = Column(
+    updated_at = Column(
         DateTime(timezone=True),
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
@@ -84,7 +84,7 @@ class Candlestick(Base):
     currency_pair = relationship("CurrencyPair")
 
     created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
-    upated_at = Column(
+    updated_at = Column(
         DateTime(timezone=True),
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
