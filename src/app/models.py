@@ -16,7 +16,7 @@ from tornado_sqlalchemy import SQLAlchemy
 
 from enums import Markets
 
-db = SQLAlchemy(url=os.getenv('DATABASE_URL'))
+db = SQLAlchemy(url=os.getenv("DATABASE_URL"))
 
 
 class Currency(db.Model):

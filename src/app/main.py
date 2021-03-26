@@ -16,7 +16,7 @@ def make_app():
         [
             (r"/", MainHandler),
         ],
-        db=SQLAlchemy(os.getenv('DATABASE_URL'))
+        db=SQLAlchemy(os.getenv("DATABASE_URL")),
     )
 
 
