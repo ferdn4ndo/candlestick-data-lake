@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  db:
+    container_name: csdl-db
+    image: mariadb:10.5.9
+    env_file:
+      - .env
+    volumes:
+      - csdl-db-volume:/var/lib/mysql
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    restart: always
+
+  app:
+    container_name: csdl-app
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./src/app:/usr/src/app
+    command: "/usr/src/entrypoint.dev.sh"
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+volumes:
+    csdl-db-volume:
