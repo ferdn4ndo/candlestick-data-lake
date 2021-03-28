@@ -1,7 +1,7 @@
 """Fixing typo
 
 Revision ID: 79447245343b
-Revises: bf2dad266504
+Revises: 3a8066d4f680
 Create Date: 2021-03-26 03:28:56.500907
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
 revision = "79447245343b"
-down_revision = "bf2dad266504"
+down_revision = "3a8066d4f680"
 branch_labels = None
 depends_on = None
 
