@@ -73,7 +73,3 @@ class TestBinanceClient(unittest.TestCase):
             mock.configure_mock(**attrs)
 
         return mock
-
-
-if __name__ == '__main__':
-    unittest.main()
