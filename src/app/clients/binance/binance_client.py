@@ -1,9 +1,6 @@
-import time
-from datetime import datetime
-
 import requests
 
-from .binance_exception import BinanceException
+from clients.client_exception import ClientException
 from clients.client_base import ClientBase
 
 
@@ -17,15 +14,15 @@ class BinanceClient(ClientBase):
     def get_candles(self, symbol: str, start: int = None, end: int = None, interval: str = '1m') -> list:
         params = {'symbol': symbol, 'interval': interval, 'limit': 1000}
         if start:
-            params['startTime'] = start
+            params['startTime'] = start * 1000  # to miliseconds
         if end:
-            params['endTime'] = end
+            params['endTime'] = end * 1000  # to miliseconds
 
         try:
             response = requests.get('{}{}'.format(self.URL_BASE, self.PATH_KLINES), params)
         except Exception:
             # TODO [feature-5] Improve it
-            raise BinanceException
+            raise ClientException
         else:
             self._check_response(response)
 
@@ -49,7 +46,7 @@ class BinanceClient(ClientBase):
             response = requests.get('{}{}'.format(self.URL_BASE, self.PATH_EXCHANGE_INFO))
         except Exception:
             # TODO [feature-5] Improve it
-            raise BinanceException
+            raise ClientException
         else:
             self._check_response(response)
 
@@ -68,4 +65,4 @@ class BinanceClient(ClientBase):
     def _check_response(self, response: requests.Response) -> None:
         # TODO [feature-5] Improve it
         if response.status_code != requests.codes.ok:
-            raise BinanceException
+            raise ClientException

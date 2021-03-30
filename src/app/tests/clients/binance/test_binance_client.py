@@ -22,7 +22,7 @@ class TestBinanceClient(unittest.TestCase):
 
         mock_get.assert_called_once_with(
             'https://api.binance.com/api/v3/klines',
-            {'symbol': 'BTCUSDT', 'interval': '1m', 'limit': 1000, 'startTime': 1616958000, 'endTime': 1616961720}
+            {'symbol': 'BTCUSDT', 'interval': '1m', 'limit': 1000, 'startTime': 1616958000000, 'endTime': 1616961720000}
         )
 
         expected = [

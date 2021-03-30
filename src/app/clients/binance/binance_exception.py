@@ -1,2 +1,0 @@
-class BinanceException(Exception):
-    pass

@@ -3,25 +3,14 @@ from sqlalchemy_get_or_create import update_or_create
 import unittest
 from unittest.mock import patch, MagicMock
 
-from services.binance_service import BinanceService
+from services.exchanges.binance_exchange_service import BinanceExchangeService
 from models import Exchange, Currency, CurrencyPair, Candlestick
 
 
-class TestBinanceService(unittest.TestCase):
+class TestBinanceExchangeService(unittest.TestCase):
 
-    @patch('services.binance_service.BinanceService._create_db_session')
-    def setUp(self, mock_create_db_session: MagicMock) -> None:
-        mock_create_db_session.return_value = Session()
-        self.service = BinanceService()
-
-    def test_init_exchange(self) -> None:
-        pass
-
-    def test_populate_candlesticks(self) -> None:
-        pass
-
-    def test_populate_currency_pair(self) -> None:
-        pass
+    def setUp(self) -> None:
+        self.service = BinanceExchangeService(Session())
 
     @patch('sqlalchemy_get_or_create.update_or_create')
     def test_add_exchange(self, mock_update_or_create: MagicMock) -> None:
@@ -31,7 +20,7 @@ class TestBinanceService(unittest.TestCase):
         response = self.service.add_exchange()
 
         mock_update_or_create.assert_called_once_with(
-            self.service._session,
+            self.service.session,
             Exchange,
             code='binance',
             defaults={'name': 'Binance Exchange'}
@@ -46,7 +35,7 @@ class TestBinanceService(unittest.TestCase):
         response = self.service.add_currency('BTCUSDT')
 
         mock_update_or_create.assert_called_once_with(
-            self.service._session,
+            self.service.session,
             Currency,
             symbol='BTCUSDT',
             defaults={'name': 'BTCUSDT'}
@@ -64,7 +53,7 @@ class TestBinanceService(unittest.TestCase):
         response = self.service.add_currency_pair(exchange, 'BTCUSDT', currency_base, currency_quote)
 
         mock_update_or_create.assert_called_once_with(
-            self.service._session,
+            self.service.session,
             CurrencyPair,
             exchange=exchange,
             symbol='BTCUSDT',
@@ -85,7 +74,7 @@ class TestBinanceService(unittest.TestCase):
         )
 
         mock_update_or_create.assert_called_once_with(
-            self.service._session,
+            self.service.session,
             Candlestick,
             currency_pair=currency_pair,
             timestamp=1231006505,
