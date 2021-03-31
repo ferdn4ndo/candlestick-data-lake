@@ -19,6 +19,7 @@ class HealthController(BaseController, SessionMixin):
                 "system": {
                     "name": "candlestick-data-lake",
                     "version": __version__,
+                    "github": "https://github.com/ferdn4ndo/candlestick-data-lake/",
                 },
                 "database": {
                     "candlesticks": total_candlesticks,
