@@ -1,7 +1,7 @@
 import tornado.ioloop
 import tornado.web
 
-from app import APP_PORT, DEVELOPMENT_MODE
+from app import STATIC_PATH, APP_PORT, DEVELOPMENT_MODE
 from app.router import routes
 from app.services import DatabaseService
 
@@ -14,6 +14,7 @@ def make_app():
         routes,
         db=DatabaseService.get_db(),
         debug=DEVELOPMENT_MODE,
+        static_path=STATIC_PATH,
     )
 
 
