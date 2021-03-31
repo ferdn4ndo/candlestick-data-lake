@@ -17,7 +17,13 @@ class ExchangeServiceBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def add_currency_pair(self, exchange: Exchange, symbol: str, currency_base: Currency, currency_quote: Currency) -> CurrencyPair:
+    def add_currency_pair(
+        self,
+        exchange: Exchange,
+        symbol: str,
+        currency_base: Currency,
+        currency_quote: Currency,
+    ) -> CurrencyPair:
         raise NotImplementedError
 
     @abstractmethod

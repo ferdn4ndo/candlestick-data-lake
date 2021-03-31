@@ -9,7 +9,7 @@ class TestClientBase(unittest.TestCase):
         self.client = ClientBase()
 
     def test_get_candles(self) -> None:
-        self.assertRaises(NotImplementedError, self.client.get_candles, 'BTCUSDT')
+        self.assertRaises(NotImplementedError, self.client.get_candles, "BTCUSDT")
 
     def test_get_symbols(self) -> None:
         self.assertRaises(NotImplementedError, self.client.get_symbols)

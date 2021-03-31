@@ -1,7 +1,17 @@
 import os
 
 from datetime import datetime
-from sqlalchemy import DECIMAL, BigInteger, Column, DateTime, Enum, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import (
+    DECIMAL,
+    BigInteger,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import backref, relationship
 from tornado_sqlalchemy import SQLAlchemy
 
@@ -16,7 +26,9 @@ class Exchange(db.Model):
     name = Column(String(20), nullable=False)
 
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
-    updated_at = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(
+        DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
 
 class Currency(db.Model):
@@ -27,7 +39,9 @@ class Currency(db.Model):
     name = Column(String(20))
 
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
-    updated_at = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(
+        DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
 
 class CurrencyPair(db.Model):
@@ -45,7 +59,9 @@ class CurrencyPair(db.Model):
     currency_quote = relationship("Currency", foreign_keys=[currency_quote_id])
 
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
-    updated_at = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(
+        DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
 
 class Candlestick(db.Model):
@@ -64,4 +80,6 @@ class Candlestick(db.Model):
     currency_pair = relationship("CurrencyPair")
 
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
-    updated_at = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(
+        DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow
+    )
