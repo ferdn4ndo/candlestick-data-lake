@@ -1,5 +1,4 @@
 import datetime
-import os
 
 from sqlalchemy import (
     Column,
@@ -11,12 +10,12 @@ from sqlalchemy import (
     BigInteger,
     DECIMAL,
 )
-from sqlalchemy.orm import relationship, backref
-from tornado_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
 
+from app.services import DatabaseService
 from enums import Markets
 
-db = SQLAlchemy(url=os.getenv("DATABASE_URL"))
+db = DatabaseService.get_db()
 
 
 class Currency(db.Model):
