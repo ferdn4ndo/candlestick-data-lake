@@ -14,20 +14,22 @@ class HealthController(BaseController, SessionMixin):
             total_currency_pairs = await as_future(session.query(CurrencyPair).count)
             total_exchanges = await as_future(session.query(Exchange).count)
 
-        self.write({
-            "system": {
-                "name": "candlestick-data-lake",
-                "version": __version__,
-            },
-            "database": {
-                "candlesticks": total_candlesticks,
-                "currencies": total_currencies,
-                "currencyPairs": total_currency_pairs,
-                "exchanges": total_exchanges,
-            },
-            "services": {
-                "binance": {
-                    "status": "ToDo",
-                }
-            },
-        })
+        self.write(
+            {
+                "system": {
+                    "name": "candlestick-data-lake",
+                    "version": __version__,
+                },
+                "database": {
+                    "candlesticks": total_candlesticks,
+                    "currencies": total_currencies,
+                    "currencyPairs": total_currency_pairs,
+                    "exchanges": total_exchanges,
+                },
+                "services": {
+                    "binance": {
+                        "status": "ToDo",
+                    }
+                },
+            }
+        )
