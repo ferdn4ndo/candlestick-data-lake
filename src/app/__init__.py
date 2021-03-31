@@ -10,7 +10,7 @@ def is_truly(value) -> bool:
     ]
 
 
-__version__ = "0.0.1"
+__version__ = os.getenv("APP_VERSION", "0.0.1")
 APP_PORT = os.getenv("APP_PORT", "8888")
 DEVELOPMENT_MODE = is_truly(os.getenv("DEVELOPMENT_MODE", "0"))
 STATIC_PATH = os.path.join(os.path.dirname(__file__), "static")
