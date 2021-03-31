@@ -6,9 +6,6 @@ from tornado.escape import json_decode
 
 
 class BaseController(tornado.web.RequestHandler):
-    def __init__(self, application, request: httputil.HTTPServerRequest, **kwargs: Any):
-        super().__init__(application, request, **kwargs)
-
     def data_received(self, chunk: bytes) -> Optional[Awaitable[None]]:
         pass
 
