@@ -6,7 +6,10 @@ from controllers import HealthController, IndexController
 routes = [
     (r"/", IndexController),
     (r"/health", HealthController),
-    # These are required to create an alias of the static files at the root path
+]
+
+# These are required to create an alias of the static files at the root path
+routes.extend([
     (
         r"/(apple-touch-icon\.png)",
         tornado.web.StaticFileHandler,
@@ -19,4 +22,4 @@ routes = [
     ),
     (r"/(favicon\.icon)", tornado.web.StaticFileHandler, dict(path=STATIC_PATH)),
     (r"/(site.webmanifest)", tornado.web.StaticFileHandler, dict(path=STATIC_PATH)),
-]
+])
