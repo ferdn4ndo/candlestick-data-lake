@@ -9,17 +9,19 @@ routes = [
 ]
 
 # These are required to create an alias of the static files at the root path
-routes.extend([
-    (
-        r"/(apple-touch-icon\.png)",
-        tornado.web.StaticFileHandler,
-        dict(path=STATIC_PATH),
-    ),
-    (
-        r"/(android-chrome-*\.png)",
-        tornado.web.StaticFileHandler,
-        dict(path=STATIC_PATH),
-    ),
-    (r"/(favicon\.icon)", tornado.web.StaticFileHandler, dict(path=STATIC_PATH)),
-    (r"/(site.webmanifest)", tornado.web.StaticFileHandler, dict(path=STATIC_PATH)),
-])
+routes.extend(
+    [
+        (
+            r"/(apple-touch-icon\.png)",
+            tornado.web.StaticFileHandler,
+            dict(path=STATIC_PATH),
+        ),
+        (
+            r"/(android-chrome-*\.png)",
+            tornado.web.StaticFileHandler,
+            dict(path=STATIC_PATH),
+        ),
+        (r"/(favicon\.icon)", tornado.web.StaticFileHandler, dict(path=STATIC_PATH)),
+        (r"/(site.webmanifest)", tornado.web.StaticFileHandler, dict(path=STATIC_PATH)),
+    ]
+)
