@@ -1,1 +1,1 @@
-from .database_service import DatabaseService
+from app.services.database_service import DatabaseService

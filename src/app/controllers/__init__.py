@@ -1,2 +1,2 @@
-from .health_controller import HealthController
-from .index_controller import IndexController
+from app.controllers.health_controller import HealthController
+from app.controllers.index_controller import IndexController

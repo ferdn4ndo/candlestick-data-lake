@@ -1,7 +1,7 @@
 import tornado.web
 
 from app import STATIC_PATH
-from controllers import HealthController, IndexController
+from app.controllers import HealthController, IndexController
 
 routes = [
     (r"/", IndexController),

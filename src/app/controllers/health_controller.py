@@ -1,9 +1,8 @@
 from tornado_sqlalchemy import SessionMixin, as_future
 
 from app import __version__
+from app.controllers.base_controller import BaseController
 from app.models import Candlestick, Currency, CurrencyPair, Exchange
-
-from .base_controller import BaseController
 
 
 class HealthController(BaseController, SessionMixin):
