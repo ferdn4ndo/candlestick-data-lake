@@ -49,9 +49,7 @@ class TestBinanceExchangeService(unittest.TestCase):
 
         currency_base = Currency()
         currency_quote = Currency()
-        response = self.service.add_currency_pair(
-            exchange, "BTCUSDT", currency_base, currency_quote
-        )
+        response = self.service.add_currency_pair(exchange, "BTCUSDT", currency_base, currency_quote)
 
         mock_update_or_create.assert_called_once_with(
             self.service.session,

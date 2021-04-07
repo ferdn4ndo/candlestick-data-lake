@@ -84,9 +84,7 @@ class TestBinanceClient(unittest.TestCase):
         ]
         self.assertListEqual(expected, response)
 
-    def create_mock_response(
-        self, status_code: int = 200, json_data: str = None
-    ) -> MagicMock:
+    def create_mock_response(self, status_code: int = 200, json_data: str = None) -> MagicMock:
         mock = MagicMock(status_code=status_code)
 
         if json_data is not None:

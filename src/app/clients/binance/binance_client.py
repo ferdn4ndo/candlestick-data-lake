@@ -11,9 +11,7 @@ class BinanceClient(ClientBase):
     PATH_EXCHANGE_INFO = "/exchangeInfo"  # https://binance-docs.github.io/apidocs/spot/en/#exchange-information
     PATH_KLINES = "/klines"  # https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
 
-    def get_candles(
-        self, symbol: str, start: int = None, end: int = None, interval: str = "1m"
-    ) -> list:
+    def get_candles(self, symbol: str, start: int = None, end: int = None, interval: str = "1m") -> list:
         params = {"symbol": symbol, "interval": interval, "limit": 1000}
         if start:
             params["startTime"] = start * 1000  # to miliseconds
@@ -21,9 +19,7 @@ class BinanceClient(ClientBase):
             params["endTime"] = end * 1000  # to miliseconds
 
         try:
-            response = requests.get(
-                "{}{}".format(self.URL_BASE, self.PATH_KLINES), params
-            )
+            response = requests.get("{}{}".format(self.URL_BASE, self.PATH_KLINES), params)
         except Exception:
             # TODO [feature-5] Improve it
             raise ClientException
@@ -49,9 +45,7 @@ class BinanceClient(ClientBase):
 
     def get_symbols(self) -> list:
         try:
-            response = requests.get(
-                "{}{}".format(self.URL_BASE, self.PATH_EXCHANGE_INFO)
-            )
+            response = requests.get("{}{}".format(self.URL_BASE, self.PATH_EXCHANGE_INFO))
         except Exception:
             # TODO [feature-5] Improve it
             raise ClientException

@@ -35,6 +35,4 @@ class TestExchangeServiceBase(unittest.TestCase):
         )
 
     def test_add_candlestick(self) -> None:
-        self.assertRaises(
-            NotImplementedError, self.service.add_candlestick, "BTCUSDT", CurrencyPair()
-        )
+        self.assertRaises(NotImplementedError, self.service.add_candlestick, "BTCUSDT", CurrencyPair())
