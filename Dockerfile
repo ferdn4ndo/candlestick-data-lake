@@ -22,4 +22,6 @@ RUN chmod +x entrypoint.dev.sh entrypoint.sh
 
 WORKDIR /usr/src/app
 
+ENV PYTHONPATH="/usr/src/:${PYTHONPATH}"
+
 CMD ["entrypoint.py"]

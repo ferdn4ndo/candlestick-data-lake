@@ -1,3 +1,5 @@
+![CandleStick Data Lake Logo](src/app/static/icon.png)
+
 # candlestick-data-lake
 A data lake application for candlestick crawling, storage and syncronous (API) and asyncronous (WebSockets) serving
 
