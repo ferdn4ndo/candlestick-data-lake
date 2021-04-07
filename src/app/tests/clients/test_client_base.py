@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch
-from clients.client_base import ClientBase
+from app.clients.client_base import ClientBase
 
 
 class TestClientBase(unittest.TestCase):
-    @patch("clients.client_base.ClientBase.__abstractmethods__", set())
+    @patch("app.clients.client_base.ClientBase.__abstractmethods__", set())
     def setUp(self):
         self.client = ClientBase()
 

@@ -1,16 +1,13 @@
 import unittest
 from unittest.mock import patch
 
-from models import Currency, CurrencyPair, Exchange
-from services.exchanges.exchange_service_base import ExchangeServiceBase
+from app.models import Currency, CurrencyPair, Exchange
+from app.services.exchanges.exchange_service_base import ExchangeServiceBase
 from sqlalchemy.orm import Session
 
 
 class TestExchangeServiceBase(unittest.TestCase):
-    @patch(
-        "services.exchanges.exchange_service_base.ExchangeServiceBase.__abstractmethods__",
-        set(),
-    )
+    @patch("app.services.exchanges.exchange_service_base.ExchangeServiceBase.__abstractmethods__", set())
     def setUp(self):
         self.session = Session()
         self.service = ExchangeServiceBase(self.session)
@@ -35,6 +32,4 @@ class TestExchangeServiceBase(unittest.TestCase):
         )
 
     def test_add_candlestick(self) -> None:
-        self.assertRaises(
-            NotImplementedError, self.service.add_candlestick, "BTCUSDT", CurrencyPair()
-        )
+        self.assertRaises(NotImplementedError, self.service.add_candlestick, "BTCUSDT", CurrencyPair())

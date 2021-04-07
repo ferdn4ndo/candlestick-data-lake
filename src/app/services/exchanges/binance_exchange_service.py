@@ -3,9 +3,9 @@ import os
 from datetime import datetime
 import sqlalchemy_get_or_create
 
-from models import Candlestick, CurrencyPair, Exchange, Currency
+from app.models import Candlestick, CurrencyPair, Exchange, Currency
 
-from services.exchanges.exchange_service_base import ExchangeServiceBase
+from app.services.exchanges.exchange_service_base import ExchangeServiceBase
 
 
 class BinanceExchangeService(ExchangeServiceBase):

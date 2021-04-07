@@ -3,8 +3,8 @@ from sqlalchemy_get_or_create import update_or_create
 import unittest
 from unittest.mock import patch, MagicMock
 
-from services.exchanges.binance_exchange_service import BinanceExchangeService
-from models import Exchange, Currency, CurrencyPair, Candlestick
+from app.services.exchanges.binance_exchange_service import BinanceExchangeService
+from app.models import Exchange, Currency, CurrencyPair, Candlestick
 
 
 class TestBinanceExchangeService(unittest.TestCase):
@@ -49,9 +49,7 @@ class TestBinanceExchangeService(unittest.TestCase):
 
         currency_base = Currency()
         currency_quote = Currency()
-        response = self.service.add_currency_pair(
-            exchange, "BTCUSDT", currency_base, currency_quote
-        )
+        response = self.service.add_currency_pair(exchange, "BTCUSDT", currency_base, currency_quote)
 
         mock_update_or_create.assert_called_once_with(
             self.service.session,

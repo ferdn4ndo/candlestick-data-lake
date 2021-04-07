@@ -1,5 +1,5 @@
 import unittest
-from clients.client_exception import ClientException
+from app.clients.client_exception import ClientException
 
 
 class TestClientException(unittest.TestCase):
