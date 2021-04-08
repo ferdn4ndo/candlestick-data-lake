@@ -1,3 +1,4 @@
+from datetime import datetime
 from app.clients.client_base import ClientBase
 from app.clients.client_exception import ClientException
 from app.models import CurrencyPair, Exchange
@@ -15,7 +16,7 @@ class ConsumerService:
 
         try:
             symbols = self.client.get_symbols()
-        except BinanceException:
+        except ClientException:
             # TODO [feature-5] Handle possible exceptions. For example: timeout, throttling, IP Ban
             pass
 
