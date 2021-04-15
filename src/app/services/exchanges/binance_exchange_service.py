@@ -1,7 +1,7 @@
 import os
+import sqlalchemy_get_or_create
 
 from datetime import datetime
-import sqlalchemy_get_or_create
 
 from app.models import Candlestick, CurrencyPair, Exchange, Currency
 

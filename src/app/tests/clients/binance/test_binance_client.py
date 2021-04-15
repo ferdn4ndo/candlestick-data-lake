@@ -1,5 +1,6 @@
 import requests
 import unittest
+
 from unittest.mock import patch, MagicMock
 
 from app.clients.binance.binance_client import BinanceClient

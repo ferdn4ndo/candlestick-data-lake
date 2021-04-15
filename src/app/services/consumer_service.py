@@ -1,9 +1,10 @@
 from datetime import datetime
+from sqlalchemy.orm.exc import NoResultFound
+
 from app.clients.client_base import ClientBase
 from app.clients.client_exception import ClientException
 from app.models import CurrencyPair, Exchange
 from app.services.exchanges.exchange_service_base import ExchangeServiceBase
-from sqlalchemy.orm.exc import NoResultFound
 
 
 class ConsumerService:
@@ -33,7 +34,7 @@ class ConsumerService:
         try:
             pair = self.service.session.query(CurrencyPair).filter_by(symbol=pair_symbol, exchange=exchange).one()
         except NoResultFound:
-            raise Exception("Pair {} does not belongs to {}".format(pair_symbol, self.service.EXCHANGE_CODE))
+            raise Exception("Pair {} does not belong to {}".format(pair_symbol, self.service.EXCHANGE_CODE))
 
         last_timestamp = None
         while True:
@@ -41,7 +42,7 @@ class ConsumerService:
                 candles = self.client.get_candles(symbol=pair.symbol, end=last_timestamp)
             except ClientException:
                 # TODO [feature-5] Handle possible exceptions. For example: timeout, throttling, IP Ban
-                raise Exception("deu ruim no get_candles para o timestamp {}".format(last_timestamp))
+                raise Exception("Unable to execute the get_candles method for the timestamp {}".format(last_timestamp))
 
             if not candles or (last_timestamp is not None and last_timestamp == candles[0]["timestamp"]):
                 # Reached the end of available candles

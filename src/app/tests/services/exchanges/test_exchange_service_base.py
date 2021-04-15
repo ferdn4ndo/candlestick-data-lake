@@ -1,9 +1,10 @@
 import unittest
+
+from sqlalchemy.orm import Session
 from unittest.mock import patch
 
 from app.models import Currency, CurrencyPair, Exchange
 from app.services.exchanges.exchange_service_base import ExchangeServiceBase
-from sqlalchemy.orm import Session
 
 
 class TestExchangeServiceBase(unittest.TestCase):

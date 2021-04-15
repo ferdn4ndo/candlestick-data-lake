@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
-from app.models import Currency, CurrencyPair, Exchange
 from sqlalchemy.orm import Session
+
+from app.models import Currency, CurrencyPair, Exchange
 
 
 class ExchangeServiceBase(ABC):
