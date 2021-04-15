@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from app.clients.client_base import ClientBase
 from app.clients.client_exception import ClientException
 from app.models import CurrencyPair, Exchange
@@ -26,12 +27,12 @@ class ConsumerService:
 
             self.service.add_currency_pair(exchange, symbol["symbol"], currency_base, currency_quote)
 
-        self.service.session.commit()
+        self.service.database.session.commit()
 
     def populate_candlesticks(self, pair_symbol: str) -> None:
         exchange = self.service.add_exchange()
         try:
-            pair = self.service.session.query(CurrencyPair).filter_by(symbol=pair_symbol, exchange=exchange).one()
+            pair = self.service.database.session.query(CurrencyPair).filter_by(symbol=pair_symbol, exchange=exchange).one()
         except NoResultFound:
             raise Exception("Pair {} does not belongs to {}".format(pair_symbol, self.service.EXCHANGE_CODE))
 
@@ -52,4 +53,4 @@ class ConsumerService:
 
             last_timestamp = candles[0]["timestamp"]
 
-        self.service.session.commit()
+        self.service.database.session.commit()

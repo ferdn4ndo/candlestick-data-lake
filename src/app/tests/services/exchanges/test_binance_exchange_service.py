@@ -1,5 +1,4 @@
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy_get_or_create import update_or_create
 import unittest
 from unittest.mock import patch, MagicMock
 
@@ -11,7 +10,7 @@ class TestBinanceExchangeService(unittest.TestCase):
     def setUp(self) -> None:
         self.service = BinanceExchangeService(Session())
 
-    @patch("sqlalchemy_get_or_create.update_or_create")
+    @patch("app.services.database_service.DatabaseService.update_or_create")
     def test_add_exchange(self, mock_update_or_create: MagicMock) -> None:
         exchange = Exchange()
         mock_update_or_create.return_value = (exchange, True)
@@ -19,14 +18,13 @@ class TestBinanceExchangeService(unittest.TestCase):
         response = self.service.add_exchange()
 
         mock_update_or_create.assert_called_once_with(
-            self.service.session,
             Exchange,
             code="binance",
             defaults={"name": "Binance Exchange"},
         )
         self.assertEqual(exchange, response)
 
-    @patch("sqlalchemy_get_or_create.update_or_create")
+    @patch("app.services.database_service.DatabaseService.update_or_create")
     def test_add_currency(self, mock_update_or_create: MagicMock) -> None:
         currency = Currency()
         mock_update_or_create.return_value = (currency, True)
@@ -34,14 +32,13 @@ class TestBinanceExchangeService(unittest.TestCase):
         response = self.service.add_currency("BTCUSDT")
 
         mock_update_or_create.assert_called_once_with(
-            self.service.session,
             Currency,
             symbol="BTCUSDT",
             defaults={"name": "BTCUSDT"},
         )
         self.assertEqual(currency, response)
 
-    @patch("sqlalchemy_get_or_create.update_or_create")
+    @patch("app.services.database_service.DatabaseService.update_or_create")
     def test_add_currency_pair(self, mock_update_or_create: MagicMock) -> None:
         exchange = Exchange()
         currency_pair = CurrencyPair()
@@ -52,7 +49,6 @@ class TestBinanceExchangeService(unittest.TestCase):
         response = self.service.add_currency_pair(exchange, "BTCUSDT", currency_base, currency_quote)
 
         mock_update_or_create.assert_called_once_with(
-            self.service.session,
             CurrencyPair,
             exchange=exchange,
             symbol="BTCUSDT",
@@ -61,7 +57,7 @@ class TestBinanceExchangeService(unittest.TestCase):
 
         self.assertEqual(currency_pair, response)
 
-    @patch("sqlalchemy_get_or_create.update_or_create")
+    @patch("app.services.database_service.DatabaseService.update_or_create")
     def test_add_candlestick(self, mock_update_or_create: MagicMock) -> None:
         candlestick = Candlestick()
         mock_update_or_create.return_value = (candlestick, True)
@@ -80,7 +76,6 @@ class TestBinanceExchangeService(unittest.TestCase):
         )
 
         mock_update_or_create.assert_called_once_with(
-            self.service.session,
             Candlestick,
             currency_pair=currency_pair,
             timestamp=1231006505,

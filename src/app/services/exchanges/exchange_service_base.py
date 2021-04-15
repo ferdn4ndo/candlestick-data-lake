@@ -1,12 +1,15 @@
 from abc import ABC, abstractmethod
 
 from app.models import Currency, CurrencyPair, Exchange
+from app.services.database_service import DatabaseService
 from sqlalchemy.orm import Session
 
 
 class ExchangeServiceBase(ABC):
+    EXCHANGE_CODE = None
+
     def __init__(self, session: Session) -> None:
-        self.session = session
+        self.database = DatabaseService(session)
 
     @abstractmethod
     def add_exchange(self) -> None:

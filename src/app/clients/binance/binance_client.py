@@ -1,5 +1,7 @@
 import requests
+from datetime import datetime
 
+from app import DEVELOPMENT_MODE
 from app.clients.client_exception import ClientException
 from app.clients.client_base import ClientBase
 
@@ -27,6 +29,15 @@ class BinanceClient(ClientBase):
             self._check_response(response)
 
         candles = response.json()
+
+        if DEVELOPMENT_MODE:
+            print(
+                "{} | {} - {}".format(
+                    datetime.now(),
+                    datetime.fromtimestamp(candles[0][0] / 1000),
+                    datetime.fromtimestamp(candles[-1][0] / 1000),
+                )
+            )
 
         formatted_candles = []
         for candle in candles:

@@ -13,7 +13,7 @@ class TestExchangeServiceBase(unittest.TestCase):
         self.service = ExchangeServiceBase(self.session)
 
     def test__init__(self) -> None:
-        self.assertEqual(self.session, self.service.session)
+        self.assertEqual(self.session, self.service.database.session)
 
     def test_add_exchange(self) -> None:
         self.assertRaises(NotImplementedError, self.service.add_exchange)

@@ -1,7 +1,6 @@
 import os
 
 from datetime import datetime
-import sqlalchemy_get_or_create
 
 from app.models import Candlestick, CurrencyPair, Exchange, Currency
 
@@ -12,8 +11,7 @@ class BinanceExchangeService(ExchangeServiceBase):
     EXCHANGE_CODE = "binance"
 
     def add_exchange(self) -> Exchange:
-        (exchange, _) = sqlalchemy_get_or_create.update_or_create(
-            self.session,
+        (exchange, _) = self.database.update_or_create(
             Exchange,
             code=self.EXCHANGE_CODE,
             defaults={"name": "Binance Exchange"},
@@ -22,9 +20,7 @@ class BinanceExchangeService(ExchangeServiceBase):
         return exchange
 
     def add_currency(self, symbol: str) -> None:
-        (currency, _) = sqlalchemy_get_or_create.update_or_create(
-            self.session, Currency, symbol=symbol, defaults={"name": symbol}
-        )
+        (currency, _) = self.database.update_or_create(Currency, symbol=symbol, defaults={"name": symbol})
 
         return currency
 
@@ -35,8 +31,7 @@ class BinanceExchangeService(ExchangeServiceBase):
         currency_base: Currency,
         currency_quote: Currency,
     ) -> CurrencyPair:
-        (currency_pair, _) = sqlalchemy_get_or_create.update_or_create(
-            self.session,
+        (currency_pair, _) = self.database.update_or_create(
             CurrencyPair,
             exchange=exchange,
             symbol=symbol,
@@ -46,8 +41,7 @@ class BinanceExchangeService(ExchangeServiceBase):
         return currency_pair
 
     def add_candlestick(self, pair: CurrencyPair, candle_data: list) -> None:
-        (candlestick, _) = sqlalchemy_get_or_create.update_or_create(
-            self.session,
+        (candlestick, _) = self.database.update_or_create(
             Candlestick,
             currency_pair=pair,
             timestamp=candle_data["timestamp"],
