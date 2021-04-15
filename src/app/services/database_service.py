@@ -1,9 +1,8 @@
 import os
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
-from tornado_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
+from tornado_sqlalchemy import SQLAlchemy
 
 
 class DatabaseService:
