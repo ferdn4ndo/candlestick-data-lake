@@ -27,7 +27,8 @@ class ConsumerService:
 
             self.service.add_currency_pair(exchange, symbol["symbol"], currency_base, currency_quote)
 
-        self.service.session.commit()
+            self.service.session.commit()
+
 
     def populate_candlesticks(self, pair_symbol: str) -> None:
         exchange = self.service.add_exchange()
@@ -51,6 +52,6 @@ class ConsumerService:
             for candle in candles:
                 self.service.add_candlestick(pair, candle)
 
-            last_timestamp = candles[0]["timestamp"]
+            self.service.session.commit()
 
-        self.service.session.commit()
+            last_timestamp = candles[0]["timestamp"]
