@@ -1,7 +1,7 @@
 """Adding first models
 
 Revision ID: 3a8066d4f680
-Revises: 
+Revises:
 Create Date: 2021-03-18 21:14:51.966498
 
 """
@@ -21,7 +21,7 @@ def upgrade():
     op.create_table(
         "currency",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("symbol", sa.String(length=4), nullable=False),
+        sa.Column("symbol", sa.String(length=10), nullable=False),
         sa.Column("name", sa.String(length=20), nullable=False),
         sa.Column("precision", sa.Integer(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=True),
@@ -47,7 +47,7 @@ def upgrade():
         sa.Column("exchange_id", sa.Integer(), nullable=True),
         sa.Column("currency_a_id", sa.Integer(), nullable=True),
         sa.Column("currency_b_id", sa.Integer(), nullable=True),
-        sa.Column("symbol", sa.String(length=10), nullable=False),
+        sa.Column("symbol", sa.String(length=20), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("upated_at", sa.DateTime(timezone=True), nullable=True),
         sa.ForeignKeyConstraint(

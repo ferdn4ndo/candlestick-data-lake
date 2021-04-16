@@ -16,4 +16,4 @@ cd app || { echo "Unable to navigate to application folder" 1>&2; exit 1; }
 
 alembic upgrade head
 
-python main.py
+python -m tornado.autoreload main.py
