@@ -23,8 +23,8 @@ class BinanceClient(ClientBase):
         except Exception:
             # TODO [feature-5] Improve it
             raise ClientException
-        else:
-            self._check_response(response)
+
+        self._check_response(response)
 
         candles = response.json()
 

@@ -27,14 +27,14 @@ class ConsumerService:
 
             self.service.add_currency_pair(exchange, symbol["symbol"], currency_base, currency_quote)
 
-        self.service.database.session.commit()
+            self.service.database.session.commit()
 
     def populate_candlesticks(self, pair_symbol: str) -> None:
         exchange = self.service.add_exchange()
         try:
             pair = self.service.database.session.query(CurrencyPair).filter_by(symbol=pair_symbol, exchange=exchange).one()
         except NoResultFound:
-            raise Exception("Pair {} does not belongs to {}".format(pair_symbol, self.service.EXCHANGE_CODE))
+            raise Exception("Pair {} does not belong to {}".format(pair_symbol, self.service.EXCHANGE_CODE))
 
         last_timestamp = None
         while True:
@@ -42,7 +42,7 @@ class ConsumerService:
                 candles = self.client.get_candles(symbol=pair.symbol, end=last_timestamp)
             except ClientException:
                 # TODO [feature-5] Handle possible exceptions. For example: timeout, throttling, IP Ban
-                raise Exception("deu ruim no get_candles para o timestamp {}".format(last_timestamp))
+                raise Exception("Unable to execute the get_candles method for the timestamp {}".format(last_timestamp))
 
             if not candles or (last_timestamp is not None and last_timestamp == candles[0]["timestamp"]):
                 # Reached the end of available candles
@@ -51,6 +51,6 @@ class ConsumerService:
             for candle in candles:
                 self.service.add_candlestick(pair, candle)
 
-            last_timestamp = candles[0]["timestamp"]
+            self.service.database.session.commit()
 
-        self.service.database.session.commit()
+            last_timestamp = candles[0]["timestamp"]

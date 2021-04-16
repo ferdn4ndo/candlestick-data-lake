@@ -1,5 +1,7 @@
 import unittest
+
 from unittest.mock import patch
+
 from app.clients.client_base import ClientBase
 
 
