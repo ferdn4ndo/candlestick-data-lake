@@ -29,7 +29,6 @@ class ConsumerService:
 
             self.service.session.commit()
 
-
     def populate_candlesticks(self, pair_symbol: str) -> None:
         exchange = self.service.add_exchange()
         try:
