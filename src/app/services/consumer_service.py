@@ -32,7 +32,9 @@ class ConsumerService:
     def populate_candlesticks(self, pair_symbol: str) -> None:
         exchange = self.service.add_exchange()
         try:
-            pair = self.service.database.session.query(CurrencyPair).filter_by(symbol=pair_symbol, exchange=exchange).one()
+            pair = (
+                self.service.database.session.query(CurrencyPair).filter_by(symbol=pair_symbol, exchange=exchange).one()
+            )
         except NoResultFound:
             raise Exception("Pair {} does not belong to {}".format(pair_symbol, self.service.EXCHANGE_CODE))
 

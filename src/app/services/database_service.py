@@ -21,7 +21,7 @@ class DatabaseService:
 
             return self._create_object_from_params(model, kwargs, params)
 
-    def update_or_create(self, model, defaults:dict = None, **kwargs):
+    def update_or_create(self, model, defaults: dict = None, **kwargs):
         defaults = defaults or {}
 
         with self.session.begin_nested():
