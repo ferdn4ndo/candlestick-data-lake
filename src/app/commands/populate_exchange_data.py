@@ -24,7 +24,8 @@ def show_help():
 def execute(arguments: list):
     if len(arguments) < 2:
         print(
-            'This command expects two arguments: the exchange name and the pair symbol. Run with --help for more info.')
+            "This command expects two arguments: the exchange name and the pair symbol. Run with --help for more info."
+        )
         return
 
     engine = create_engine(os.getenv("DATABASE_URL"))
@@ -35,10 +36,10 @@ def execute(arguments: list):
     try:
         exchange = session.query(Exchange).filter_by(code=exchange_code).one()
     except NoResultFound:
-        print('Exchange code {} not found!'.format(exchange_code))
+        print("Exchange code {} not found!".format(exchange_code))
         return
 
-    print('Selected exchange {} - {}'.format(exchange_code.code, exchange_code.name))
+    print("Selected exchange {} - {}".format(exchange_code.code, exchange_code.name))
 
-    print('We should be importing here..')
+    print("We should be importing here..")
     # ToDo: instantiate the exchange service and import
