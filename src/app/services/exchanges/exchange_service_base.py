@@ -25,7 +25,7 @@ class ExchangeServiceBase(ABC):
 
         return exchange
 
-    def add_currency(self, symbol: str) -> None:
+    def add_currency(self, symbol: str) -> Currency:
         (currency, _) = self.database.update_or_create(Currency, symbol=symbol, defaults={"name": symbol})
 
         return currency

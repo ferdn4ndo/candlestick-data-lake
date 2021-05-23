@@ -1,6 +1,7 @@
 import os
 
-from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from tornado_sqlalchemy import SQLAlchemy
 
@@ -12,6 +13,12 @@ class DatabaseService:
     @staticmethod
     def get_db() -> SQLAlchemy:
         return SQLAlchemy(os.getenv("DATABASE_URL"))
+
+    @staticmethod
+    def create_session():
+        engine = create_engine(os.getenv("DATABASE_URL"))
+        session_maker = sessionmaker(bind=engine)
+        return session_maker()
 
     def get_or_create(self, model, defaults=None, **kwargs):
         try:

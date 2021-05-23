@@ -1,9 +1,7 @@
-import os
-from sqlalchemy import create_engine
-from sqlalchemy.exc import NoResultFound
-from sqlalchemy.orm import sessionmaker
-
-from app.models import Exchange
+from app.clients.binance.binance_client import BinanceClient
+from app.clients.client_exception import ClientException
+from app.services import DatabaseService
+from app.services.exchanges.binance_exchange_service import BinanceExchangeService
 
 
 def show_help():
@@ -22,24 +20,29 @@ def show_help():
 
 
 def execute(arguments: list):
-    if len(arguments) < 2:
-        print(
-            "This command expects two arguments: the exchange name and the pair symbol. Run with --help for more info."
-        )
-        return
+    print("Populating Binance exchange data")
+    populate_binance_data()
 
-    engine = create_engine(os.getenv("DATABASE_URL"))
-    session_maker = sessionmaker(bind=engine)
-    session = session_maker()
 
-    exchange_code = arguments[1]
+def populate_binance_data():
+    session = DatabaseService.create_session()
+
+    client = BinanceClient()
+    service = BinanceExchangeService(session)
+    exchange = service.add_exchange()
+
     try:
-        exchange = session.query(Exchange).filter_by(code=exchange_code).one()
-    except NoResultFound:
-        print("Exchange code {} not found!".format(exchange_code))
+        symbols = client.get_symbols()
+    except ClientException as ex:
+        print("Exchange exception")
+        print(ex)
+        # TODO [feature-5] Handle possible exceptions. For example: timeout, throttling, IP Ban
         return
 
-    print("Selected exchange {} - {}".format(exchange_code.code, exchange_code.name))
+    for symbol in symbols:
+        currency_base = service.add_currency(symbol["currencyBase"])
+        currency_quote = service.add_currency(symbol["currencyQuote"])
 
-    print("We should be importing here..")
-    # ToDo: instantiate the exchange service and import
+        service.add_currency_pair(exchange, symbol["symbol"], currency_base, currency_quote)
+
+        service.database.session.commit()
