@@ -1,12 +1,12 @@
-from tornado_sqlalchemy import SessionMixin, as_future
+from tornado_sqlalchemy import as_future
 
 from app import __version__
 from app.controllers.base_controller import BaseController
 from app.models import Candlestick, Currency, CurrencyPair, Exchange
 
 
-class HealthController(BaseController, SessionMixin):
-    async def get(self):
+class HealthController(BaseController):
+    async def get(self) -> None:
         with self.make_session() as session:
             total_candlesticks = await as_future(session.query(Candlestick).count)
             total_currencies = await as_future(session.query(Currency).count)

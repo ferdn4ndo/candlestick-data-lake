@@ -2,6 +2,8 @@ import os
 from abc import ABC
 from datetime import datetime
 
+from app.models import Currency, CurrencyPair, Exchange
+from app.services.database_service import DatabaseService
 import sqlalchemy_get_or_create
 from app.models import Candlestick, Currency, CurrencyPair, Exchange
 from sqlalchemy.orm import Session
@@ -12,11 +14,10 @@ class ExchangeServiceBase(ABC):
     EXCHANGE_NAME = None
 
     def __init__(self, session: Session) -> None:
-        self.session = session
+        self.database = DatabaseService(session)
 
-    def add_exchange(self) -> None:
-        (exchange, _) = sqlalchemy_get_or_create.update_or_create(
-            self.session,
+    def add_exchange(self) -> Exchange:
+        (exchange, _) = self.database.update_or_create(
             Exchange,
             code=self.EXCHANGE_CODE,
             defaults={"name": self.EXCHANGE_NAME},
@@ -24,10 +25,8 @@ class ExchangeServiceBase(ABC):
 
         return exchange
 
-    def add_currency(self, symbol: str) -> None:
-        (currency, _) = sqlalchemy_get_or_create.update_or_create(
-            self.session, Currency, symbol=symbol, defaults={"name": symbol}
-        )
+    def add_currency(self, symbol: str) -> Currency:
+        (currency, _) = self.database.update_or_create(Currency, symbol=symbol, defaults={"name": symbol})
 
         return currency
 
@@ -38,8 +37,7 @@ class ExchangeServiceBase(ABC):
         currency_base: Currency,
         currency_quote: Currency,
     ) -> CurrencyPair:
-        (currency_pair, _) = sqlalchemy_get_or_create.update_or_create(
-            self.session,
+        (currency_pair, _) = self.database.update_or_create(
             CurrencyPair,
             exchange=exchange,
             symbol=symbol,
@@ -49,8 +47,7 @@ class ExchangeServiceBase(ABC):
         return currency_pair
 
     def add_candlestick(self, pair: CurrencyPair, candle_data: list) -> None:
-        (candlestick, _) = sqlalchemy_get_or_create.update_or_create(
-            self.session,
+        (candlestick, _) = self.database.update_or_create(
             Candlestick,
             currency_pair=pair,
             timestamp=candle_data["timestamp"],

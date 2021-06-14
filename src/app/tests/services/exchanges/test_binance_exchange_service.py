@@ -1,11 +1,7 @@
 import unittest
 
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy_get_or_create import update_or_create
-from unittest.mock import patch, MagicMock
-
 from app.services.exchanges.binance_exchange_service import BinanceExchangeService
-from app.models import Exchange, Currency, CurrencyPair, Candlestick
+from sqlalchemy.orm import Session
 
 
 class TestBinanceExchangeService(unittest.TestCase):
