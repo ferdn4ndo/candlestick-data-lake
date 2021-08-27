@@ -1,15 +1,13 @@
 import os
-
 from datetime import datetime
+
 from sqlalchemy import DECIMAL, BigInteger, Column, DateTime, Enum, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import backref, relationship
 from tornado_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy(url=os.getenv("DATABASE_URL"))
-from sqlalchemy.orm import relationship
-
 from app.services import DatabaseService
 
+db = SQLAlchemy(url=os.getenv("DATABASE_URL"))
 db = DatabaseService.get_db()
 
 
