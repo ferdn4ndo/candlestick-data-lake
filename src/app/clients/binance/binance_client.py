@@ -1,4 +1,5 @@
 import requests
+
 from app.clients.client_exception import ClientException
 from app.clients.client_base import ClientBase
 

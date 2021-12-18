@@ -7,7 +7,6 @@ from tornado_sqlalchemy import SQLAlchemy
 
 from app.services import DatabaseService
 
-db = SQLAlchemy(url=os.getenv("DATABASE_URL"))
 db = DatabaseService.get_db()
 
 
