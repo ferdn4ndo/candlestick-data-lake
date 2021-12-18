@@ -51,7 +51,7 @@ class BinanceWebsocket:
         manager = BinanceSocketManager(client)
 
         # start any sockets here, i.e a trade socket
-        ts = manager.kline_socket('BTCUSDT')
+        ts = manager.kline_socket("BTCUSDT")
 
         # then start receiving messages
         async with ts as tscm:
@@ -59,58 +59,41 @@ class BinanceWebsocket:
                 res = await tscm.recv()
                 await self.handle_message(res)
 
-
     async def handle_message(self, res):
-        timestamp = datetime.fromtimestamp(res['E']/1000)
-        start = datetime.fromtimestamp(res['k']['t']/1000)
-        end = datetime.fromtimestamp(res['k']['T']/1000)
-        open = res['k']['o']
-        close = res['k']['c']
-        high = res['k']['h']
-        low = res['k']['l']
-        volume = res['k']['v']
-        closed = res['k']['x']
+        timestamp = datetime.fromtimestamp(res["E"] / 1000)
+        start = datetime.fromtimestamp(res["k"]["t"] / 1000)
+        end = datetime.fromtimestamp(res["k"]["T"] / 1000)
+        open = res["k"]["o"]
+        close = res["k"]["c"]
+        high = res["k"]["h"]
+        low = res["k"]["l"]
+        volume = res["k"]["v"]
+        closed = res["k"]["x"]
 
-        print('timestamp: {} | start: {} | end: {} | open: {} | close: {} | high: {} | low: {} | volume: {} | closed: {}'.format(timestamp, start, end, open, close, high, low, volume, closed))
+        print(
+            "timestamp: {} | start: {} | end: {} | open: {} | close: {} | high: {} | low: {} | volume: {} | closed: {}".format(
+                timestamp, start, end, open, close, high, low, volume, closed
+            )
+        )
         if closed is True:
-            await self.save_candlestick(res['E']/1000, open, high, low, close, volume)
+            await self.save_candlestick(res["E"] / 1000, open, high, low, close, volume)
 
     async def save_candlestick(self, timestamp, open, high, low, close, volume):
         # recupera exchange
-        (exchange, _) = self.service.database.get_or_create(
-            Exchange,
-            code='binance',
-            defaults={'name': 'Binance'}
-        )
+        (exchange, _) = self.service.database.get_or_create(Exchange, code="binance", defaults={"name": "Binance"})
 
-        (currency_a, _) = self.service.database.get_or_create(
-            Currency, 
-            symbol='BTC',
-            defaults={'name': 'Bitcoin'}
-        )
-        (currency_b, _) = self.service.database.get_or_create(
-            Currency,
-            symbol='USDT',
-            defaults={'name': 'ESD Tether'}
-        )
+        (currency_a, _) = self.service.database.get_or_create(Currency, symbol="BTC", defaults={"name": "Bitcoin"})
+        (currency_b, _) = self.service.database.get_or_create(Currency, symbol="USDT", defaults={"name": "ESD Tether"})
         (pair, _) = self.service.database.get_or_create(
             CurrencyPair,
             exchange=exchange,
             currency_base=currency_a,
             currency_quote=currency_b,
-            defaults={'symbol': 'BTCUSDT'}
+            defaults={"symbol": "BTCUSDT"},
         )
 
         self.service.add_candlestick(
-            pair,
-            {
-                "timestamp": timestamp,
-                "open": open,
-                "high": high,
-                "low": low,
-                "close": close,
-                "volume": volume
-            }
+            pair, {"timestamp": timestamp, "open": open, "high": high, "low": low, "close": close, "volume": volume}
         )
 
         self.service.database.session.commit()

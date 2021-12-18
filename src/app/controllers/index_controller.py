@@ -13,7 +13,7 @@ class IndexController(BaseController):
 
         consumer = ConsumerService(client, service)
 
-        pair_symbol = 'BATUSDT'
+        pair_symbol = "BATUSDT"
         consumer.populate_candlesticks(pair_symbol)
 
         self.write("CandleStick Data Lake v{}".format(__version__))
