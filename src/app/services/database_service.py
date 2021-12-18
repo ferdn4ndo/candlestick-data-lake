@@ -20,7 +20,7 @@ class DatabaseService:
         session_maker = sessionmaker(bind=engine)
         return session_maker()
 
-    def get_or_create(self, model, defaults=None, **kwargs):
+    def get_or_create(self, model, defaults: dict = None, **kwargs):
         try:
             return self.session.query(model).filter_by(**kwargs).one(), False
         except NoResultFound:

@@ -46,7 +46,7 @@ class ExchangeServiceBase(ABC):
 
         return currency_pair
 
-    def add_candlestick(self, pair: CurrencyPair, candle_data: list) -> None:
+    def add_candlestick(self, pair: CurrencyPair, candle_data: list) -> Candlestick:
         (candlestick, _) = self.database.update_or_create(
             Candlestick,
             currency_pair=pair,
