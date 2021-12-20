@@ -18,7 +18,6 @@ class BinanceWebsocket:
 
         return self.manager
 
-
     def register_pair(self, symbol):
         pass
 
@@ -55,10 +54,12 @@ class BinanceWebsocket:
         }"""
         manager = await self.get_manager()
 
-        ts = manager.multiplex_socket([
-            "btcusdt@kline_1m",
-            "ethusdt@kline_1m",
-        ])
+        ts = manager.multiplex_socket(
+            [
+                "btcusdt@kline_1m",
+                "ethusdt@kline_1m",
+            ]
+        )
 
         async with ts as tscm:
             while True:
@@ -89,29 +90,11 @@ class BinanceWebsocket:
             await self.save_candlestick(symbol, timestamp, open, high, low, close, volume)
 
     async def save_candlestick(
-        self,
-        symbol: str,
-        timestamp: int,
-        open: float,
-        high: float,
-        low: float,
-        close: float,
-        volume: float
+        self, symbol: str, timestamp: int, open: float, high: float, low: float, close: float, volume: float
     ) -> None:
-        pair = self.service.get_currency_pair(
-            BinanceExchangeService.EXCHANGE_CODE,
-            symbol
-        )
+        pair = self.service.get_currency_pair(BinanceExchangeService.EXCHANGE_CODE, symbol)
         self.service.add_candlestick(
-            pair,
-            {
-                "timestamp": timestamp,
-                "open": open,
-                "high": high,
-                "low": low,
-                "close": close,
-                "volume": volume
-            }
+            pair, {"timestamp": timestamp, "open": open, "high": high, "low": low, "close": close, "volume": volume}
         )
 
         self.service.database.session.commit()

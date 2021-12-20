@@ -68,4 +68,3 @@ class ExchangeServiceBase(ABC):
         pair = self.database.session.query(CurrencyPair).filter_by(exchange=exchange, symbol=symbol).one()
 
         return pair
-
