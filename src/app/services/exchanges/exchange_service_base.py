@@ -61,3 +61,11 @@ class ExchangeServiceBase(ABC):
         )
 
         return candlestick
+
+    def get_currency_pair(self, exchange_code: str, symbol: str) -> CurrencyPair:
+        # TODO melhorar isso, da pra fazer um unica query
+        exchange = self.database.session.query(Exchange).filter_by(code=exchange_code).one()
+        pair = self.database.session.query(CurrencyPair).filter_by(exchange=exchange, symbol=symbol).one()
+
+        return pair
+

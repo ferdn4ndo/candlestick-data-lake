@@ -1,17 +1,23 @@
 from datetime import datetime
-import asyncio
-import json
 from binance import AsyncClient, BinanceSocketManager
 from app.services import DatabaseService
 from app.services.exchanges.binance_exchange_service import BinanceExchangeService
-from app.models import Candlestick, Currency, CurrencyPair, Exchange
 
 
 class BinanceWebsocket:
     def __init__(self):
         session = DatabaseService.create_session()
         self.service = BinanceExchangeService(session)
+        self.manager = None
         pass
+
+    async def get_manager(self):
+        if self.manager is None:
+            client = await AsyncClient.create()
+            self.manager = BinanceSocketManager(client)
+
+        return self.manager
+
 
     def register_pair(self, symbol):
         pass
@@ -47,53 +53,65 @@ class BinanceWebsocket:
                 "B": "13279784.01349473"  # can be ignored
             }
         }"""
-        client = await AsyncClient.create()
-        manager = BinanceSocketManager(client)
+        manager = await self.get_manager()
 
-        # start any sockets here, i.e a trade socket
-        ts = manager.kline_socket("BTCUSDT")
+        ts = manager.multiplex_socket([
+            "btcusdt@kline_1m",
+            "ethusdt@kline_1m",
+        ])
 
-        # then start receiving messages
         async with ts as tscm:
             while True:
                 res = await tscm.recv()
+                print(res)
                 await self.handle_message(res)
 
     async def handle_message(self, res):
-        timestamp = datetime.fromtimestamp(res["E"] / 1000)
-        start = datetime.fromtimestamp(res["k"]["t"] / 1000)
-        end = datetime.fromtimestamp(res["k"]["T"] / 1000)
-        open = res["k"]["o"]
-        close = res["k"]["c"]
-        high = res["k"]["h"]
-        low = res["k"]["l"]
-        volume = res["k"]["v"]
-        closed = res["k"]["x"]
+        symbol = res["data"]["k"]["s"]
+        timestamp = int(res["data"]["E"] / 1000)
+        open = res["data"]["k"]["o"]
+        close = res["data"]["k"]["c"]
+        high = res["data"]["k"]["h"]
+        low = res["data"]["k"]["l"]
+        volume = res["data"]["k"]["v"]
+        closed = res["data"]["k"]["x"]
 
+        fomratted_timestamp = datetime.fromtimestamp(res["data"]["E"] / 1000)
+        formatted_start = datetime.fromtimestamp(res["data"]["k"]["t"] / 1000)
+        formatter_end = datetime.fromtimestamp(res["data"]["k"]["T"] / 1000)
         print(
             "timestamp: {} | start: {} | end: {} | open: {} | close: {} | high: {} | low: {} | volume: {} | closed: {}".format(
-                timestamp, start, end, open, close, high, low, volume, closed
+                fomratted_timestamp, formatted_start, formatter_end, open, close, high, low, volume, closed
             )
         )
+
         if closed is True:
-            await self.save_candlestick(res["E"] / 1000, open, high, low, close, volume)
+            await self.save_candlestick(symbol, timestamp, open, high, low, close, volume)
 
-    async def save_candlestick(self, timestamp, open, high, low, close, volume):
-        # recupera exchange
-        (exchange, _) = self.service.database.get_or_create(Exchange, code="binance", defaults={"name": "Binance"})
-
-        (currency_a, _) = self.service.database.get_or_create(Currency, symbol="BTC", defaults={"name": "Bitcoin"})
-        (currency_b, _) = self.service.database.get_or_create(Currency, symbol="USDT", defaults={"name": "ESD Tether"})
-        (pair, _) = self.service.database.get_or_create(
-            CurrencyPair,
-            exchange=exchange,
-            currency_base=currency_a,
-            currency_quote=currency_b,
-            defaults={"symbol": "BTCUSDT"},
+    async def save_candlestick(
+        self,
+        symbol: str,
+        timestamp: int,
+        open: float,
+        high: float,
+        low: float,
+        close: float,
+        volume: float
+    ) -> None:
+        pair = self.service.get_currency_pair(
+            BinanceExchangeService.EXCHANGE_CODE,
+            symbol
         )
-
         self.service.add_candlestick(
-            pair, {"timestamp": timestamp, "open": open, "high": high, "low": low, "close": close, "volume": volume}
+            pair,
+            {
+                "timestamp": timestamp,
+                "open": open,
+                "high": high,
+                "low": low,
+                "close": close,
+                "volume": volume
+            }
         )
 
         self.service.database.session.commit()
