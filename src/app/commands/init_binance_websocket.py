@@ -1,11 +1,10 @@
-import asyncio
 from app.clients.binance.binance_websocket import BinanceWebsocket
 
 
 def show_help():
     return """
     Start Binance websocket consumption.
-    
+
     Usage:
     python manage.py init_binance_websocket
 """
@@ -18,4 +17,7 @@ def execute(arguments: list):
 
 def start_binance_websocket():
     websocket = BinanceWebsocket()
-    asyncio.get_event_loop().run_until_complete(websocket.process())
+    # recebe lista de pares
+    websocket.register_pair("BTCUSDT")
+    websocket.register_pair("ETHUSDT")
+    websocket.listen()
