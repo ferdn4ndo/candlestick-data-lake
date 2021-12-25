@@ -7,7 +7,7 @@ def show_help():
     Start Binance websocket consumption.
 
     Usage:
-    python manage.py init_binance_websocket
+    python manage.py init_binance_websocket PAIR1, PAIR2, ...
 """
 
 

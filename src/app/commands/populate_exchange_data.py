@@ -9,13 +9,7 @@ def show_help():
     Populates the initial exchange data.
     
     Usage:
-    python manage.py populate_exchange_data <exchange_code> <pair_symbol>
-    
-    The available exchange codes are:
-      binance
-      
-    To list the available pair symbols for a given exchange, run:
-    python manage.py populate_exchange_data <exchange_code> --list-symbols
+    python manage.py populate_exchange_data
 """
 
 
