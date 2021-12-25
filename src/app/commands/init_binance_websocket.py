@@ -1,4 +1,3 @@
-import sys
 from app.services.exchanges.binance_websocket_service import BinanceWebsocketService
 
 
@@ -12,7 +11,7 @@ def show_help():
 
 
 def execute(arguments: list):
-    pairs = sys.argv[1:]
+    pairs = arguments[1:]
 
     print("Starting Binance websocket for:")
     print(*pairs, sep=", ")
