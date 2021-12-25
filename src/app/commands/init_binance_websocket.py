@@ -13,17 +13,17 @@ def show_help():
 
 def execute(arguments: list):
     pairs = sys.argv[1:]
-    
+
     print("Starting Binance websocket for:")
-    print(*pairs, sep = ", ")
-    
+    print(*pairs, sep=", ")
+
     start_binance_websocket(pairs)
 
 
 def start_binance_websocket(pairs):
     service = BinanceWebsocketService()
-    
+
     for pair in pairs:
         service.register_pair(pair)
-    
+
     service.listen()
