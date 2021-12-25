@@ -1,4 +1,5 @@
-from app.clients.binance.binance_websocket import BinanceWebsocket
+import sys
+from app.services.exchanges.binance_websocket_service import BinanceWebsocketService
 
 
 def show_help():
@@ -11,13 +12,18 @@ def show_help():
 
 
 def execute(arguments: list):
-    print("Starting Binance websocket")
-    start_binance_websocket()
+    pairs = sys.argv[1:]
+    
+    print("Starting Binance websocket for:")
+    print(*pairs, sep = ", ")
+    
+    start_binance_websocket(pairs)
 
 
-def start_binance_websocket():
-    websocket = BinanceWebsocket()
-    # recebe lista de pares
-    websocket.register_pair("BTCUSDT")
-    websocket.register_pair("ETHUSDT")
-    websocket.listen()
+def start_binance_websocket(pairs):
+    service = BinanceWebsocketService()
+    
+    for pair in pairs:
+        service.register_pair(pair)
+    
+    service.listen()
