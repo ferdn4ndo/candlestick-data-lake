@@ -20,11 +20,7 @@ def show_help() -> str:
 def execute(arguments: list) -> None:
     pairs = arguments[1:]
 
-    logging.basicConfig(
-        level=logging.INFO, 
-        format='%(asctime)s %(levelname)s %(message)s', 
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
     logging.info("Starting Binance for:")
     logging.info(", ".join(pairs))

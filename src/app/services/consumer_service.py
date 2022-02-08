@@ -42,7 +42,7 @@ class ConsumerService:
         last_timestamp = None
         while True:
             logging.info("Getting candles from {}".format(last_timestamp))
-            
+
             try:
                 candles = self.client.get_candles(symbol=pair.symbol, end=last_timestamp)
             except ClientException:

@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
+
 class BinanceWebsocketService(unittest.TestCase):
     def setUp(self):
         pass
