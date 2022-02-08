@@ -1,30 +1,30 @@
 import asyncio
-
+import logging
 from datetime import datetime
-from binance import AsyncClient, BinanceSocketManager
-from app.services import DatabaseService
+
 from app.services.exchanges.binance_exchange_service import BinanceExchangeService
+from binance import AsyncClient, BinanceSocketManager
+from sqlalchemy.orm import Session
 
 
 class BinanceWebsocketService:
-    def __init__(self):
-        session = DatabaseService.create_session()
+    def __init__(self, session: Session) -> None:
         self.service = BinanceExchangeService(session)
         self.loop = asyncio.get_event_loop()
         self.pairs = []
-        self.manager = None
+        self._manager = None
 
     async def get_manager(self) -> BinanceSocketManager:
-        if self.manager is None:
+        if self._manager is None:
             client = await AsyncClient.create()
-            self.manager = BinanceSocketManager(client)
+            self._manager = BinanceSocketManager(client)
 
-        return self.manager
+        return self._manager
 
-    def register_pair(self, symbol) -> None:
+    def register_pair(self, symbol: str) -> None:
         self.pairs.append(symbol)
 
-    def unregister_pair(self, symbol) -> None:
+    def unregister_pair(self, symbol: str) -> None:
         self.pairs.remove(symbol)
 
     def restart(self) -> None:
@@ -36,7 +36,6 @@ class BinanceWebsocketService:
 
     async def process(self) -> None:
         manager = await self.get_manager()
-
         ts = manager.multiplex_socket(self._get_multiplex_socket_value())
 
         async with ts as tscm:
@@ -58,7 +57,7 @@ class BinanceWebsocketService:
             fomratted_timestamp = datetime.fromtimestamp(res["data"]["E"] / 1000)
             formatted_start = datetime.fromtimestamp(res["data"]["k"]["t"] / 1000)
             formatter_end = datetime.fromtimestamp(res["data"]["k"]["T"] / 1000)
-            print(
+            logging.info(
                 "timestamp: {} | symbol: {} | start: {} | end: {} | open: {} | close: {} | high: {} | low: {} | volume: {} | closed: {}".format(
                     fomratted_timestamp, symbol, formatted_start, formatter_end, open, close, high, low, volume, closed
                 )

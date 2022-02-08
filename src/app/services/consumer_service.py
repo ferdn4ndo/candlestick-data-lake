@@ -1,8 +1,7 @@
-from datetime import datetime
-
+import logging
 from app.clients.client_base import ClientBase
 from app.clients.client_exception import ClientException
-from app.models import CurrencyPair, Exchange
+from app.models import CurrencyPair
 from app.services.exchanges.exchange_service_base import ExchangeServiceBase
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -30,6 +29,8 @@ class ConsumerService:
             self.service.database.session.commit()
 
     def populate_candlesticks(self, pair_symbol: str) -> None:
+        logging.info("Starting populate for {}".format(pair_symbol))
+
         exchange = self.service.add_exchange()
         try:
             pair = (
@@ -40,6 +41,8 @@ class ConsumerService:
 
         last_timestamp = None
         while True:
+            logging.info("Getting candles from {}".format(last_timestamp))
+            
             try:
                 candles = self.client.get_candles(symbol=pair.symbol, end=last_timestamp)
             except ClientException:

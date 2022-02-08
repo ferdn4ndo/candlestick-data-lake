@@ -21,4 +21,5 @@ def make_app():
 if __name__ == "__main__":
     tornado_app = make_app()
     tornado_app.listen(APP_PORT)
-    tornado.ioloop.IOLoop.current().start()
+    loop = tornado.ioloop.IOLoop.current()
+    loop.start()

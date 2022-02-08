@@ -1,11 +1,7 @@
-import os
 from abc import ABC
-from datetime import datetime
 
-from app.models import Currency, CurrencyPair, Exchange
-from app.services.database_service import DatabaseService
-import sqlalchemy_get_or_create
 from app.models import Candlestick, Currency, CurrencyPair, Exchange
+from app.services.database_service import DatabaseService
 from sqlalchemy.orm import Session
 
 

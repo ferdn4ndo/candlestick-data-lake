@@ -1,6 +1,7 @@
 import os
 
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from tornado_sqlalchemy import SQLAlchemy
@@ -15,7 +16,7 @@ class DatabaseService:
         return SQLAlchemy(os.getenv("DATABASE_URL"))
 
     @staticmethod
-    def create_session():
+    def create_session() -> Session:
         engine = create_engine(os.getenv("DATABASE_URL"))
         session_maker = sessionmaker(bind=engine)
         return session_maker()
