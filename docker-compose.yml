@@ -30,4 +30,4 @@ services:
     tty: true
 
 volumes:
-    csdl-db-volume:
+  csdl-db-volume:

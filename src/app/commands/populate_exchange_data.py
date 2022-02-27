@@ -23,7 +23,7 @@ def populate_binance_data():
 
     client = BinanceClient()
     service = BinanceExchangeService(session)
-    exchange = service.add_exchange()
+    exchange = service.refresh_exchange()
 
     try:
         symbols = client.get_symbols()
@@ -39,4 +39,4 @@ def populate_binance_data():
 
         service.add_currency_pair(exchange, symbol["symbol"], currency_base, currency_quote)
 
-        service.database.session.commit()
+    service.database.session.commit()

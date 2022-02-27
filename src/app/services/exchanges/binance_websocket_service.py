@@ -2,14 +2,14 @@ import asyncio
 import logging
 from datetime import datetime
 
-from app.services.exchanges.binance_exchange_service import BinanceExchangeService
 from binance import AsyncClient, BinanceSocketManager
-from sqlalchemy.orm import Session
+
+from app.models import CurrencyPair
+from app.services.exchanges.binance_exchange_service import BinanceExchangeService
 
 
 class BinanceWebsocketService:
-    def __init__(self, session: Session) -> None:
-        self.service = BinanceExchangeService(session)
+    def __init__(self) -> None:
         self.loop = asyncio.get_event_loop()
         self.pairs = []
         self._manager = None
@@ -20,6 +20,12 @@ class BinanceWebsocketService:
             self._manager = BinanceSocketManager(client)
 
         return self._manager
+
+    def is_currency_pair_model_registered(self, currency_pair: CurrencyPair) -> bool:
+        return self.is_pair_registered(symbol=currency_pair.symbol)
+
+    def is_pair_registered(self, symbol: str) -> bool:
+        return symbol in self.pairs
 
     def register_pair(self, symbol: str) -> None:
         self.pairs.append(symbol)
@@ -66,14 +72,36 @@ class BinanceWebsocketService:
             await self.save_candlestick(symbol, timestamp, open, high, low, close, volume)
 
     async def save_candlestick(
-        self, symbol: str, timestamp: int, open: float, high: float, low: float, close: float, volume: float
+            self,
+            symbol: str,
+            timestamp: int,
+            opening: float,
+            high: float,
+            low: float,
+            closing: float,
+            volume: float
     ) -> None:
-        pair = self.service.get_currency_pair(BinanceExchangeService.EXCHANGE_CODE, symbol)
-        self.service.add_candlestick(
-            pair, {"timestamp": timestamp, "open": open, "high": high, "low": low, "close": close, "volume": volume}
+        global session
+
+        service = BinanceExchangeService(session)
+        service.refresh_exchange()
+
+        pair = service.get_currency_pair(symbol)
+        service.add_candlestick(
+            pair,
+            [
+                {
+                    "timestamp": timestamp,
+                    "open": opening,
+                    "high": high,
+                    "low": low,
+                    "close": closing,
+                    "volume": volume
+                }
+            ]
         )
 
-        self.service.database.session.commit()
+        session.commit()
 
     def _get_multiplex_socket_value(self) -> list:
         sockets = []

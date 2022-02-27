@@ -28,7 +28,6 @@ def execute(arguments: list) -> None:
     session = DatabaseService.create_session()
     populate_binance_data(session)
 
-    # populate_candlesticks(session, pairs)
     start_binance_websocket(session, pairs)
 
 
@@ -39,16 +38,6 @@ def populate_binance_data(session: Session) -> None:
 
     logging.info("Populating exchange data")
     consumer.populate_exchange_data()
-
-
-def populate_candlesticks(session: Session, pairs: list) -> None:
-    client = BinanceClient()
-    service = BinanceExchangeService(session)
-    consumer = ConsumerService(client, service)
-
-    for pair in pairs:
-        logging.info("Populating candlesticke for {}".format(pair))
-        consumer.populate_candlesticks(pair)
 
 
 def start_binance_websocket(session: Session, pairs: list) -> None:

@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session, sessionmaker
 class TestExchangeServiceBase(unittest.TestCase):
     def setUp(self):
         self.session = Session()
-        self.service = ExchangeServiceBase(self.session)
+        self.service = ExchangeServiceBase()
 
     def test___init__(self) -> None:
         self.assertEqual(self.session, self.service.database.session)

@@ -1,7 +1,14 @@
+import functools
 from abc import ABC, abstractmethod
+from collections import Callable
+
+from tornado.ioloop import IOLoop
 
 
 class ClientBase(ABC):
+
+    fetching_symbols = []
+
     @abstractmethod
     def get_candles(self, symbol: str, start: int = None, end: int = None, interval: str = "1m") -> list:
         """Retrieve a list of candles for a given symbol, filtering by period.
