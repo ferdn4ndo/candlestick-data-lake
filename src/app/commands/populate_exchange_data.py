@@ -1,3 +1,5 @@
+import logging
+
 from app.clients.binance.binance_client import BinanceClient
 from app.clients.client_exception import ClientException
 from app.services import DatabaseService
@@ -14,8 +16,9 @@ def show_help():
 
 
 def execute(arguments: list):
-    print("Populating Binance exchange data")
+    logging.info("Populating Binance exchange data")
     populate_binance_data()
+    logging.info("Finished populating Binance exchange data")
 
 
 def populate_binance_data():
@@ -28,15 +31,15 @@ def populate_binance_data():
     try:
         symbols = client.get_symbols()
     except ClientException as ex:
-        print("Exchange exception")
-        print(ex)
+        logging.error(f"Exchange exception: {ex}")
         # TODO [feature-5] Handle possible exceptions. For example: timeout, throttling, IP Ban
         return
 
     for symbol in symbols:
+        logging.debug(f"Adding symbol {symbol}")
         currency_base = service.add_currency(symbol["currencyBase"])
         currency_quote = service.add_currency(symbol["currencyQuote"])
 
         service.add_currency_pair(exchange, symbol["symbol"], currency_base, currency_quote)
 
-    service.database.session.commit()
+    session.commit()

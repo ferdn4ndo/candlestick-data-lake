@@ -49,7 +49,7 @@ class ExchangeServiceBase(ABC):
     def add_currency(self, symbol: str) -> Currency:
         with DatabaseService.create_session() as session:
             database_service = DatabaseService(session)
-            (currency, _) = database_service.find_or_create(Currency, symbol=symbol, defaults={"name": symbol})
+            currency = database_service.find_or_create(Currency, symbol=symbol, defaults={"name": symbol})
 
         return currency
 
@@ -62,7 +62,7 @@ class ExchangeServiceBase(ABC):
     ) -> CurrencyPair:
         with DatabaseService.create_session() as session:
             database_service = DatabaseService(session)
-            (currency_pair, _) = database_service.find_or_create(
+            currency_pair = database_service.find_or_create(
                 CurrencyPair,
                 exchange=exchange,
                 symbol=symbol,

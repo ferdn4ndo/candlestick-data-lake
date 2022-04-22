@@ -56,12 +56,7 @@ class ConsumerService:
             return datetime.datetime.fromtimestamp(float(timestamp)).isoformat()
 
         last_timestamp = None
-        i = 0
         while True:
-            i += 1
-            if i == 5:
-                break
-
             logging.info(
                 "Getting candles for symbol {} from exchange {} starting from {}".format(
                     pair_symbol,
