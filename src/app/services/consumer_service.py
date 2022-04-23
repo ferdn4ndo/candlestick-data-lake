@@ -87,7 +87,7 @@ class ConsumerService:
             last_timestamp = candles[0]["timestamp"]
 
     @staticmethod
-    async def fetch_currency_pair_candles_in_background(
+    def fetch_currency_pair_candles_in_background(
             client: ClientBase,
             service: ExchangeServiceBase,
             exchange_code: str,

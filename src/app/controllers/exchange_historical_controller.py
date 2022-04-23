@@ -3,6 +3,7 @@ import logging
 
 from tornado import gen
 from tornado.ioloop import IOLoop
+from tornado import concurrent
 
 from app.controllers.base_controller import BaseController
 from app.errors import ResourceAlreadyInUseError
@@ -60,14 +61,32 @@ class ExchangeHistoricalListController(BaseController):
         ###
         ### FERNANDO: não dá erro e a tarefa é executada, mas bloqueia qualquer outra chamada via API até ela acabar
         ###
+        executor = concurrent.futures.ThreadPoolExecutor(8)
 
-        IOLoop.current().spawn_callback(
+        executor.submit(
             ConsumerService.fetch_currency_pair_candles_in_background,
             client=exchange_client,
             service=exchange_service,
             exchange_code=exchange_code,
             pair_symbol=symbol,
         )
+
+        # IOLoop.current().add_future(
+        #     run_in_stack_context(
+        #         NullContext(),
+        #         ConsumerService.fetch_currency_pair_candles_in_background,
+
+        #     ),
+        #     lambda f: f.result()
+        # )
+
+        # ioloop.spawn_callback(
+        #     ConsumerService.fetch_currency_pair_candles_in_background,
+        #     client=exchange_client,
+        #     service=exchange_service,
+        #     exchange_code=exchange_code,
+        #     pair_symbol=symbol,
+        # )
 
         self.set_status(status_code=202, reason="The request was accepted and is being processed in background.")
         self.write(

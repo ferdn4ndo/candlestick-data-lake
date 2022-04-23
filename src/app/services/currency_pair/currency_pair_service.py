@@ -1,3 +1,4 @@
+import logging
 import os
 
 from sqlalchemy.orm import Session
@@ -28,6 +29,11 @@ class CurrencyPairService:
             exchange_code=exchange_code,
             agent=agent
         )
+
+        tempFileExists = 1 if check_if_temp_file_exists(lock_filename) else 0
+
+        logging.info(f"Checking if has lock for pair {pair_symbol} from exchange {exchange_code} (agent: {agent})")
+        logging.info(f"Lock temp file: {lock_filename} | Exists: {tempFileExists}")
 
         return check_if_temp_file_exists(lock_filename)
 
