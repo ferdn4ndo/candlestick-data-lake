@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import logging
 
@@ -25,6 +26,27 @@ class ExchangeHistoricalListController(BaseController):
 
 
         self.write(exchange_id)
+    
+    @staticmethod
+    def check_in_use(agent: str, exchange_code: str, symbol: str):
+        in_use = CurrencyPairService.is_in_use(
+            agent=agent,
+            pair_symbol=symbol,
+            exchange_code=exchange_code
+        )
+
+        if in_use:
+            raise ResourceAlreadyInUseError(
+                f"The pair symbol '{symbol}' is already being fetched from '{exchange_code}'."
+            )
+
+        CurrencyPairService.set_in_use(
+            pair_symbol=symbol,
+            exchange_code=exchange_code,
+            agent=agent,
+            raise_error=True,
+            file_content=datetime.now().isoformat()
+        )
 
     @gen.coroutine
     def post(self, **kwargs) -> None:
@@ -40,16 +62,19 @@ class ExchangeHistoricalListController(BaseController):
             exchange_code = exchange.code
             CurrencyPairService.check_if_symbol_exists(session=session, exchange=exchange, symbol=symbol)
 
-        in_use = CurrencyPairService.is_in_use(
-            agent=ConsumerService.AGENT_NAME,
-            pair_symbol=symbol,
-            exchange_code=exchange.code
-        )
-
-        if in_use:
-            raise ResourceAlreadyInUseError(
-                f"The pair symbol '{symbol}' is already being fetched from '{exchange_code}'."
+        try:
+            self.check_in_use(
+                agent=ConsumerService.AGENT_NAME,
+                exchange_code=exchange.code,
+                symbol=symbol,
             )
+        except ResourceAlreadyInUseError as ex:
+            self.send_error_response(
+                status_code=409,
+                message=str(ex)
+            )
+            return
+
 
         logging.info(
             f"Calling background fetching of pair symbol '{symbol}' from '{exchange_code}'."
