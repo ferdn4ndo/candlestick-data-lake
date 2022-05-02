@@ -1,7 +1,16 @@
 import tornado.web
 
 from app import STATIC_PATH
-from app.controllers import HealthController, IndexController, ExchangeListController, ExchangeSingleController, ExchangeStreamListController, ExchangeStreamSingleController, ExchangeHistoricalListController, ExchangeHistoricalSingleController
+from app.controllers import (
+    HealthController,
+    IndexController,
+    ExchangeListController,
+    ExchangeSingleController,
+    ExchangeStreamListController,
+    ExchangeStreamSingleController,
+    ExchangeHistoricalListController,
+    ExchangeHistoricalSingleController,
+)
 
 routes = [
     (r"/", IndexController),

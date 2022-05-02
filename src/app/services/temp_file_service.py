@@ -13,7 +13,7 @@ class FileMode:
     FILE_MODE_CREATE_ERROR_IF_EXISTS = "x"
 
 
-def get_temp_folder_path(filename = None) -> str:
+def get_temp_folder_path(filename=None) -> str:
     if not os.path.isdir(TEMP_FOLDER_PATH):
         os.mkdir(TEMP_FOLDER_PATH)
 
@@ -35,6 +35,7 @@ def read_temp_file(filename: str, filemode: str = FileMode.FILE_MODE_READ) -> st
         content = file.read()
 
     return content
+
 
 def clear_temp_folder():
     folder_path = get_temp_folder_path()

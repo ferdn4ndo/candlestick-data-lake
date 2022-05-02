@@ -65,7 +65,7 @@ class DatabaseService:
 
         try:
             self.session.add(obj)
-            #self.session.flush()
+            # self.session.flush()
             self.session.commit()
         except IntegrityError as exception:
             if "Duplicate entry" in str(exception):
