@@ -11,6 +11,7 @@ from app.services import DatabaseService
 
 db = DatabaseService.get_db()
 
+
 class BaseModel(db.Model):
     __abstract__ = True
 

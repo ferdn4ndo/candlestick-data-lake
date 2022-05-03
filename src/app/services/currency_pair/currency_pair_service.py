@@ -78,11 +78,7 @@ class CurrencyPairService:
 
     @staticmethod
     def check_in_use(agent: str, exchange_code: str, symbol: str):
-        in_use = CurrencyPairService.is_in_use(
-            agent=agent,
-            pair_symbol=symbol,
-            exchange_code=exchange_code
-        )
+        in_use = CurrencyPairService.is_in_use(agent=agent, pair_symbol=symbol, exchange_code=exchange_code)
 
         if in_use:
             raise ResourceAlreadyInUseError(
@@ -94,5 +90,5 @@ class CurrencyPairService:
             exchange_code=exchange_code,
             agent=agent,
             raise_error=True,
-            file_content=datetime.now().isoformat()
+            file_content=datetime.now().isoformat(),
         )
