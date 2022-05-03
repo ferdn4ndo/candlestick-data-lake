@@ -1,6 +1,6 @@
 import logging
-import os
 
+from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.errors import ResourceNotInUseError, ResourceNotFoundError
@@ -26,9 +26,7 @@ class CurrencyPairService:
     @staticmethod
     def is_in_use(pair_symbol: str, exchange_code: str, agent: str = "default") -> bool:
         lock_filename = CurrencyPairService.get_lock_filename(
-            pair_symbol=pair_symbol,
-            exchange_code=exchange_code,
-            agent=agent
+            pair_symbol=pair_symbol, exchange_code=exchange_code, agent=agent
         )
 
         temp_file_exists = 1 if check_if_temp_file_exists(lock_filename) else 0
@@ -40,17 +38,9 @@ class CurrencyPairService:
 
     @staticmethod
     def set_in_use(
-            pair_symbol: str,
-            exchange_code: str,
-            agent: str = "default",
-            raise_error: bool = True,
-            file_content: str = ""
+        pair_symbol: str, exchange_code: str, agent: str = "default", raise_error: bool = True, file_content: str = ""
     ):
-        in_use = CurrencyPairService.is_in_use(
-            pair_symbol=pair_symbol,
-            exchange_code=exchange_code,
-            agent=agent
-        )
+        in_use = CurrencyPairService.is_in_use(pair_symbol=pair_symbol, exchange_code=exchange_code, agent=agent)
         if raise_error and in_use:
             raise ResourceNotInUseError(
                 f"The pair '{pair_symbol}' from exchange code '{exchange_code}' is already in use!"
@@ -63,18 +53,11 @@ class CurrencyPairService:
                 agent=agent,
             )
             save_temp_file(
-                filename=lock_filename,
-                content=file_content,
-                filemode=FileMode.FILE_MODE_CREATE_ERROR_IF_EXISTS
+                filename=lock_filename, content=file_content, filemode=FileMode.FILE_MODE_CREATE_ERROR_IF_EXISTS
             )
 
     @staticmethod
-    def reset_in_use(
-            pair_symbol: str,
-            exchange_code: str,
-            agent: str = "default",
-            raise_error: bool = True
-    ):
+    def reset_in_use(pair_symbol: str, exchange_code: str, agent: str = "default", raise_error: bool = True):
         in_use = CurrencyPairService.is_in_use(
             pair_symbol=pair_symbol,
             exchange_code=exchange_code,

@@ -43,15 +43,16 @@ class ConsumerService:
             self.session.commit()
 
     @staticmethod
-    def populate_candlesticks(client: ClientBase, service: ExchangeServiceBase, exchange_code: str, pair_symbol: str) -> None:
-        logging.info("Starting populating historical candlesticks from {} for symbol {}".format(
-            exchange_code,
-            pair_symbol
-        ))
+    def populate_candlesticks(
+        client: ClientBase, service: ExchangeServiceBase, exchange_code: str, pair_symbol: str
+    ) -> None:
+        logging.info(
+            "Starting populating historical candlesticks from {} for symbol {}".format(exchange_code, pair_symbol)
+        )
 
         def print_timestamp(timestamp):
             if timestamp is None:
-                return '--Newest--'
+                return "--Newest--"
 
             return datetime.datetime.fromtimestamp(float(timestamp)).isoformat()
 
@@ -88,15 +89,17 @@ class ConsumerService:
 
     @staticmethod
     def fetch_currency_pair_candles_in_background(
-            client: ClientBase,
-            service: ExchangeServiceBase,
-            exchange_code: str,
-            pair_symbol: str,
+        client: ClientBase,
+        service: ExchangeServiceBase,
+        exchange_code: str,
+        pair_symbol: str,
     ):
-        logging.info("Entering background candle fetching from exchange '{}' and currency pair '{}'".format(
-            exchange_code,
-            pair_symbol,
-        ))
+        logging.info(
+            "Entering background candle fetching from exchange '{}' and currency pair '{}'".format(
+                exchange_code,
+                pair_symbol,
+            )
+        )
 
         ConsumerService.populate_candlesticks(
             client=client,

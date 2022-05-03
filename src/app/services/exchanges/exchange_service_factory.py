@@ -14,15 +14,16 @@ ALLOWED_EXCHANGE_CODES = [
 
 
 def get_exchange_by_id(session: Session, exchange_id: int, raise_error: bool = True) -> List[Exchange]:
-    exchange = session.query(Exchange).filter_by(id = exchange_id).first()
+    exchange = session.query(Exchange).filter_by(id=exchange_id).first()
 
     if raise_error and exchange is None:
         raise ResourceNotFoundError(f"The exchange ID '{exchange_id}' was not found!")
 
     return exchange
 
+
 def get_exchange_by_code(session: Session, exchange_code: str, raise_error: bool = True) -> List[Exchange]:
-    exchange = session.query(Exchange).filter_by(code = exchange_code).first()
+    exchange = session.query(Exchange).filter_by(code=exchange_code).first()
 
     if raise_error and exchange is None:
         raise ResourceNotFoundError(f"The exchange code '{exchange_code}' was not found!")
@@ -45,7 +46,7 @@ def create_exchange_service_from_id(session: Session, exchange_id: int) -> Excha
     Returns the correct exchange service from a given exchange model ID
     """
 
-    exchange = session.query(Exchange).filter_by(id = exchange_id).first()
+    exchange = session.query(Exchange).filter_by(id=exchange_id).first()
 
     if exchange is None:
         raise ResourceNotFoundError(f"The exchange ID '{exchange_id}' was not found!")

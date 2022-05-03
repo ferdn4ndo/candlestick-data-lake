@@ -15,13 +15,10 @@ class BaseController(RequestHandler, SessionMixin):
             self.args = json_decode(self.request.body)
 
     def send_error_response(
-            self,
-            status_code: int = 500,
-            message: str = "An unexpected error occurred.",
-            extra_payload: dict = None
+        self, status_code: int = 500, message: str = "An unexpected error occurred.", extra_payload: dict = None
     ) -> None:
         payload = extra_payload or {}
-        payload['message'] = message
+        payload["message"] = message
 
         self.set_status(status_code=status_code, reason=message)
         self.write(payload)

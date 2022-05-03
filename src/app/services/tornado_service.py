@@ -19,6 +19,7 @@ def make_tornado_app():
         static_path=STATIC_PATH,
     )
 
+
 def enter_tornado_infinite_loop():
     tornado_app = make_tornado_app()
     tornado_app.listen(APP_PORT)

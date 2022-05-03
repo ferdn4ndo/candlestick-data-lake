@@ -15,7 +15,7 @@ class BaseModel(db.Model):
     __abstract__ = True
 
     def serialize(self):
-       return {column.name: str(getattr(self, column.name)) for column in self.__table__.columns}
+        return {column.name: str(getattr(self, column.name)) for column in self.__table__.columns}
 
     def unserialize(self, data):
         for column, value in data.items():

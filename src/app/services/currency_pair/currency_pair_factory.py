@@ -8,6 +8,8 @@ def get_exchange_currency_pair_from_symbol(session: Session, exchange: Exchange,
     currency_pair = session.query(CurrencyPair).filter_by(exchange=exchange, symbol=symbol).first()
 
     if currency_pair is None:
-        raise ResourceNotFoundError(f"The symbol '{symbol}' was not found in the currency pair list of the '{exchange.code}' exchange!")
+        raise ResourceNotFoundError(
+            f"The symbol '{symbol}' was not found in the currency pair list of the '{exchange.code}' exchange!"
+        )
 
     return currency_pair

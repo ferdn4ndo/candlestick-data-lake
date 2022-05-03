@@ -99,7 +99,6 @@ class ExchangeServiceBase(ABC):
         with DatabaseService.create_session() as session:
             return session.query(CurrencyPair).filter_by(exchange=self.exchange).all()
 
-
     def list_currency_pairs_symbols(self) -> list:
         """
         Returns a list of symbols (from the CurrencyPair objects) filtered by the instance's exchange model
@@ -108,12 +107,11 @@ class ExchangeServiceBase(ABC):
 
         return [currency_pair.symbol for currency_pair in currency_pairs]
 
-
     def serialize_exchange(self) -> dict:
         """
         Serializes an exchange adding the symbols list
         """
         serialized_exchange = self.exchange.serialize()
-        serialized_exchange['symbols'] = self.list_currency_pairs_symbols()
+        serialized_exchange["symbols"] = self.list_currency_pairs_symbols()
 
         return serialized_exchange

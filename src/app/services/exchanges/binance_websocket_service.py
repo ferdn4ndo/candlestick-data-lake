@@ -72,14 +72,7 @@ class BinanceWebsocketService:
             await self.save_candlestick(symbol, timestamp, open, high, low, close, volume)
 
     async def save_candlestick(
-            self,
-            symbol: str,
-            timestamp: int,
-            opening: float,
-            high: float,
-            low: float,
-            closing: float,
-            volume: float
+        self, symbol: str, timestamp: int, opening: float, high: float, low: float, closing: float, volume: float
     ) -> None:
         global session
 
@@ -89,16 +82,7 @@ class BinanceWebsocketService:
         pair = service.get_currency_pair(symbol)
         service.add_candlestick(
             pair,
-            [
-                {
-                    "timestamp": timestamp,
-                    "open": opening,
-                    "high": high,
-                    "low": low,
-                    "close": closing,
-                    "volume": volume
-                }
-            ]
+            [{"timestamp": timestamp, "open": opening, "high": high, "low": low, "close": closing, "volume": volume}],
         )
 
         session.commit()
