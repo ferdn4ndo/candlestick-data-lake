@@ -7,13 +7,9 @@ from sqlalchemy import DECIMAL, BigInteger, Column, DateTime, Enum, ForeignKey, 
 from sqlalchemy.orm import backref, relationship
 from tornado_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy(url=os.getenv("DATABASE_URL"))
-from sqlalchemy.orm import relationship
-
 from app.services import DatabaseService
 
 db = DatabaseService.get_db()
-
 
 class BaseModel(db.Model):
     __abstract__ = True

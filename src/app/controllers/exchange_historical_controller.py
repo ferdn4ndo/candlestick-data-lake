@@ -27,26 +27,6 @@ class ExchangeHistoricalListController(BaseController):
 
         self.write(exchange_id)
     
-    @staticmethod
-    def check_in_use(agent: str, exchange_code: str, symbol: str):
-        in_use = CurrencyPairService.is_in_use(
-            agent=agent,
-            pair_symbol=symbol,
-            exchange_code=exchange_code
-        )
-
-        if in_use:
-            raise ResourceAlreadyInUseError(
-                f"The pair symbol '{symbol}' is already being fetched from '{exchange_code}'."
-            )
-
-        CurrencyPairService.set_in_use(
-            pair_symbol=symbol,
-            exchange_code=exchange_code,
-            agent=agent,
-            raise_error=True,
-            file_content=datetime.now().isoformat()
-        )
 
     @gen.coroutine
     def post(self, **kwargs) -> None:
@@ -63,7 +43,7 @@ class ExchangeHistoricalListController(BaseController):
             CurrencyPairService.check_if_symbol_exists(session=session, exchange=exchange, symbol=symbol)
 
         try:
-            self.check_in_use(
+            CurrencyPairService.check_in_use(
                 agent=ConsumerService.AGENT_NAME,
                 exchange_code=exchange.code,
                 symbol=symbol,
@@ -83,9 +63,6 @@ class ExchangeHistoricalListController(BaseController):
         exchange_client = create_client_from_exchange_code(exchange_code=exchange_code)
         exchange_service = create_service_from_exchange_code(exchange_code=exchange_code)
 
-        ###
-        ### FERNANDO: não dá erro e a tarefa é executada, mas bloqueia qualquer outra chamada via API até ela acabar
-        ###
         executor = concurrent.futures.ThreadPoolExecutor(8)
 
         executor.submit(
@@ -95,23 +72,6 @@ class ExchangeHistoricalListController(BaseController):
             exchange_code=exchange_code,
             pair_symbol=symbol,
         )
-
-        # IOLoop.current().add_future(
-        #     run_in_stack_context(
-        #         NullContext(),
-        #         ConsumerService.fetch_currency_pair_candles_in_background,
-
-        #     ),
-        #     lambda f: f.result()
-        # )
-
-        # ioloop.spawn_callback(
-        #     ConsumerService.fetch_currency_pair_candles_in_background,
-        #     client=exchange_client,
-        #     service=exchange_service,
-        #     exchange_code=exchange_code,
-        #     pair_symbol=symbol,
-        # )
 
         self.set_status(status_code=202, reason="The request was accepted and is being processed in background.")
         self.write(

@@ -1,6 +1,5 @@
-
+# Runtime-generated app temp files
 src/app/temp
-
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
