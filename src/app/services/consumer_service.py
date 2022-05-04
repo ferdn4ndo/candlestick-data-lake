@@ -57,7 +57,9 @@ class ConsumerService:
             return datetime.datetime.fromtimestamp(float(timestamp)).isoformat()
 
         last_timestamp = None
-        while CurrencyPairService.is_in_use(pair_symbol=pair_symbol, exchange_code=exchange_code, agent=ConsumerService.AGENT_NAME):
+        while CurrencyPairService.is_in_use(
+            pair_symbol=pair_symbol, exchange_code=exchange_code, agent=ConsumerService.AGENT_NAME
+        ):
             logging.info(
                 "Getting candles for symbol {} from exchange {} starting from {}".format(
                     pair_symbol,
@@ -107,7 +109,7 @@ class ConsumerService:
             exchange_code=exchange_code,
             pair_symbol=pair_symbol,
         )
-        
+
         in_use = CurrencyPairService.check_in_use(
             pair_symbol=pair_symbol,
             exchange_code=exchange_code,

@@ -30,11 +30,10 @@ class ExchangeSetupController(BaseController):
                 exchange_code = exchange.code
 
                 SetupService.setUpExchange(session=session, exchange_code=exchange_code)
-        
+
             self.write({"message": f"Setup finished successfully for exchange '{exchange_code}'!"})
         except ClientException as ex:
             logging.error(f"Exchange exception: {ex}")
             self.send_error_response(
-                status_code=500,
-                message=f"Error while executing client for exchange '{exchange_code}'!"
+                status_code=500, message=f"Error while executing client for exchange '{exchange_code}'!"
             )

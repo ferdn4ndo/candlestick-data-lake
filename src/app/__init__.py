@@ -22,8 +22,8 @@ LOG_FORMAT = os.getenv("LOG_FORMAT", "%(asctime)s %(levelname)s %(message)s")
 DATE_FORMAT = os.getenv("DATE_FORMAT", "%Y-%m-%d %H:%M:%S")
 TEMP_FOLDER_PATH = os.getenv("TEMP_FOLDER_PATH", "/usr/src/app/temp")
 DATABASE_URL = os.getenv("DATABASE_URL", "mysql+mysqldb://csdl:csdl@db:3306/csdl")
-BASIC_AUTH_USERNAME=os.getenv("BASIC_AUTH_USERNAME", "csdl")
-BASIC_AUTH_PASSWORD=os.getenv("BASIC_AUTH_PASSWORD", "root")
+BASIC_AUTH_USERNAME = os.getenv("BASIC_AUTH_USERNAME", "csdl")
+BASIC_AUTH_PASSWORD = os.getenv("BASIC_AUTH_PASSWORD", "root")
 
 tornado_app = None
 
