@@ -1,9 +1,9 @@
 from typing import List
 from sqlalchemy.orm import Session
 
-from app import DatabaseService
 from app.errors import InvalidValueError, ResourceNotFoundError
 from app.models import Exchange
+from app.services.database_service import DatabaseService
 from app.services.exchanges.binance_exchange_service import BinanceExchangeService
 from app.services.exchanges.exchange_service_base import ExchangeServiceBase
 

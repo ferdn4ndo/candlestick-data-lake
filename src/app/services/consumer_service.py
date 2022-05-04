@@ -6,13 +6,13 @@ import logging
 from sqlalchemy.orm import Session
 from tornado import gen
 
-from app import DatabaseService
 from app.clients.client_base import ClientBase
 from app.clients.client_exception import ClientException
 from app.errors import ResourceAlreadyInUseError, ClientIntegrationError
 from app.models import CurrencyPair, Exchange
 from app.services.currency_pair.currency_pair_factory import get_exchange_currency_pair_from_symbol
 from app.services.currency_pair.currency_pair_service import CurrencyPairService
+from app.services.database_service import DatabaseService
 from app.services.exchanges.exchange_service_base import ExchangeServiceBase
 from app.services.exchanges.exchange_service_factory import create_exchange_service_from_code
 
@@ -57,7 +57,7 @@ class ConsumerService:
             return datetime.datetime.fromtimestamp(float(timestamp)).isoformat()
 
         last_timestamp = None
-        while True:
+        while CurrencyPairService.is_in_use(pair_symbol=pair_symbol, exchange_code=exchange_code, agent=ConsumerService.AGENT_NAME):
             logging.info(
                 "Getting candles for symbol {} from exchange {} starting from {}".format(
                     pair_symbol,
@@ -107,10 +107,18 @@ class ConsumerService:
             exchange_code=exchange_code,
             pair_symbol=pair_symbol,
         )
-
-        CurrencyPairService.reset_in_use(
+        
+        in_use = CurrencyPairService.check_in_use(
             pair_symbol=pair_symbol,
             exchange_code=exchange_code,
             agent=ConsumerService.AGENT_NAME,
-            raise_error=False,
         )
+        if in_use:
+            CurrencyPairService.reset_in_use(
+                pair_symbol=pair_symbol,
+                exchange_code=exchange_code,
+                agent=ConsumerService.AGENT_NAME,
+                raise_error=False,
+            )
+        else:
+            logging.info("Background candle fetching already stopped from manual action")

@@ -36,7 +36,7 @@ def execute(arguments: list) -> None:
             CurrencyPairService.check_in_use(
                 agent=ConsumerService.AGENT_NAME,
                 exchange_code=exchange.code,
-                symbol=symbol,
+                pair_symbol=symbol,
             )
             
             exchange_client = create_client_from_exchange_code(exchange_code=exchange_code)

@@ -31,8 +31,8 @@ class CurrencyPairService:
 
         temp_file_exists = 1 if check_if_temp_file_exists(lock_filename) else 0
 
-        logging.info(f"Checking if has lock for pair {pair_symbol} from exchange {exchange_code} (agent: {agent})")
-        logging.info(f"Lock temp file: {lock_filename} | Exists: {temp_file_exists}")
+        logging.debug(f"Checking if has lock for pair {pair_symbol} from exchange {exchange_code} (agent: {agent})")
+        logging.debug(f"Lock temp file: {lock_filename} | Exists: {temp_file_exists}")
 
         return check_if_temp_file_exists(lock_filename)
 
@@ -77,22 +77,14 @@ class CurrencyPairService:
             remove_temp_file(lock_filename)
 
     @staticmethod
-    def check_in_use(agent: str, exchange_code: str, symbol: str):
+    def check_in_use(agent: str, exchange_code: str, pair_symbol: str):
         in_use = CurrencyPairService.is_in_use(
             agent=agent,
-            pair_symbol=symbol,
+            pair_symbol=pair_symbol,
             exchange_code=exchange_code
         )
 
         if in_use:
             raise ResourceAlreadyInUseError(
-                f"The pair symbol '{symbol}' is already being fetched from '{exchange_code}'."
+                f"The pair symbol '{pair_symbol}' is already being fetched from '{exchange_code}'."
             )
-
-        CurrencyPairService.set_in_use(
-            pair_symbol=symbol,
-            exchange_code=exchange_code,
-            agent=agent,
-            raise_error=True,
-            file_content=datetime.now().isoformat()
-        )

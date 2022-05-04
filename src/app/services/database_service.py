@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
+from app import DATABASE_URL
 from tornado_sqlalchemy import SQLAlchemy
 
 from app.errors import ModelAlreadyExistsError, ResourceNotFoundError
@@ -15,11 +16,11 @@ class DatabaseService:
 
     @staticmethod
     def get_db() -> SQLAlchemy:
-        return SQLAlchemy(os.getenv("DATABASE_URL"))
+        return SQLAlchemy(DATABASE_URL)
 
     @staticmethod
     def create_session() -> Session:
-        engine = create_engine(os.getenv("DATABASE_URL"))
+        engine = create_engine(DATABASE_URL)
         session_maker = sessionmaker(bind=engine)
         return session_maker()
 

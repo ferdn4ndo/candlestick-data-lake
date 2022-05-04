@@ -3,9 +3,8 @@ from abc import ABC
 
 from sqlalchemy.orm import Session
 
-from app import DatabaseService
-from app.errors import ResourceNotFoundError
 from app.models import Candlestick, Currency, CurrencyPair, Exchange
+from app.services.database_service import DatabaseService
 
 
 class ExchangeServiceBase(ABC):

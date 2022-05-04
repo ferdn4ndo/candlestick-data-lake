@@ -1,8 +1,9 @@
 import tornado.ioloop
 import tornado.web
 
-from app import DEVELOPMENT_MODE, APP_PORT, DatabaseService, STATIC_PATH
+from app import DEVELOPMENT_MODE, APP_PORT, STATIC_PATH
 from app.router import routes
+from app.services.database_service import DatabaseService
 from app.services.temp_file_service import clear_temp_folder
 
 

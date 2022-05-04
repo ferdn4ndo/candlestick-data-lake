@@ -7,6 +7,7 @@ EXPOSE 8888
 RUN mkdir ./app
 
 RUN apk add --no-cache \
+        curl \
         mariadb-dev \
         build-base \
         linux-headers \
@@ -23,5 +24,7 @@ RUN chmod +x entrypoint.dev.sh entrypoint.sh
 WORKDIR /usr/src/app
 
 ENV PYTHONPATH="/usr/src/:${PYTHONPATH}"
+
+HEALTHCHECK --interval=5s --timeout=5s --retries=10 --start-period=5s CMD curl -s -f http://localhost:8888/health
 
 CMD ["entrypoint.py"]

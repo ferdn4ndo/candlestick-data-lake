@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import logging
+from app.services.auth_service import require_basic_auth
 
 from tornado import gen
 from tornado.ioloop import IOLoop
@@ -19,15 +20,15 @@ from app.services.database_service import DatabaseService
 from app.services.exchanges.exchange_service_factory import create_exchange_service_from_id, get_exchange_by_id
 
 
+@require_basic_auth
 class ExchangeHistoricalListController(BaseController):
-    def get(self, **kwargs) -> None:
-        exchange_id = kwargs.get("exchange_id")
-
-        with DatabaseService.create_session() as session:
-            service = create_exchange_service_from_id(session=session, exchange_id=exchange_id)
-            currency_pairs = service.list_currency_pairs()
-
-        self.write(exchange_id)
+    def get(self) -> None:
+        self.write(
+            self.send_error_response(
+                status_code=405,
+                message=f"The setup action requires a POST request!"
+            )
+        )
 
     @gen.coroutine
     def post(self, **kwargs) -> None:
@@ -47,11 +48,19 @@ class ExchangeHistoricalListController(BaseController):
             CurrencyPairService.check_in_use(
                 agent=ConsumerService.AGENT_NAME,
                 exchange_code=exchange.code,
-                symbol=symbol,
+                pair_symbol=symbol,
             )
         except ResourceAlreadyInUseError as ex:
             self.send_error_response(status_code=409, message=str(ex))
             return
+        
+        CurrencyPairService.set_in_use(
+            pair_symbol=symbol,
+            exchange_code=exchange_code,
+            agent=ConsumerService.AGENT_NAME,
+            raise_error=True,
+            file_content=datetime.now().isoformat()
+        )
 
         logging.info(f"Calling background fetching of pair symbol '{symbol}' from '{exchange_code}'.")
 
@@ -72,8 +81,40 @@ class ExchangeHistoricalListController(BaseController):
         self.write({"message": f"Successfully started fetching data from '{exchange_code}' for symbol '{symbol}'."})
 
 
+@require_basic_auth
 class ExchangeHistoricalSingleController(BaseController):
-    def get(self, **kwargs) -> None:
+    def get(self) -> None:
+        self.write(
+            self.send_error_response(
+                status_code=405,
+                message=f"The setup action requires a DELETE request!"
+            )
+        )
+    
+    def delete(self, **kwargs) -> None:
         exchange_id = kwargs.get("exchange_id")
+        pair = kwargs.get("pair")
+        
+        with DatabaseService.create_session() as session:
+            exchange = get_exchange_by_id(session=session, exchange_id=exchange_id)
+            exchange_code = exchange.code
+            CurrencyPairService.check_if_symbol_exists(session=session, exchange=exchange, symbol=pair)
 
-        self.write(exchange_id)
+        try:
+            CurrencyPairService.check_in_use(
+                agent=ConsumerService.AGENT_NAME,
+                exchange_code=exchange.code,
+                pair_symbol=pair,
+            )
+            
+            self.send_error_response(status_code=409, message=f"The pair symbol '{pair}' is not currently in use by '{exchange_code}'!")
+        except ResourceAlreadyInUseError as ex:
+            logging.info(f"Changing flag to abort background fetching of pair symbol '{pair}' from '{exchange_code}'.")
+            
+            CurrencyPairService.reset_in_use(
+                agent=ConsumerService.AGENT_NAME,
+                exchange_code=exchange.code,
+                pair_symbol=pair,
+            )
+            
+            self.write({"message": f"Candlestick background fetching for pair symbol '{pair}' from '{exchange_code}' was stopped!"})
