@@ -4,7 +4,6 @@ from app.controllers.base_controller import BaseController
 from app.errors.model_already_exists_error import ModelAlreadyExistsError
 from app.errors.resource_not_found_error import ResourceNotFoundError
 from app.models import Exchange
-from app.services.auth_service import require_basic_auth
 from app.services.database_service import DatabaseService
 from app.services.exchanges.exchange_service_factory import (
     ALLOWED_EXCHANGE_CODES,
@@ -14,7 +13,6 @@ from app.services.exchanges.exchange_service_factory import (
 )
 
 
-@require_basic_auth
 class ExchangeListController(BaseController):
     def get(self) -> None:
         exchanges = serialize_existing_exchanges()
@@ -41,7 +39,6 @@ class ExchangeListController(BaseController):
             self.send_error_response(status_code=409, message=f"The code '{code}' is already registered.")
 
 
-@require_basic_auth
 class ExchangeSingleController(BaseController):
     def get(self, **kwargs) -> None:
         exchange_id = kwargs.get("exchange_id")

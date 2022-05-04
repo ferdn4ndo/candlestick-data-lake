@@ -26,5 +26,5 @@ def populate_binance_data():
     with DatabaseService.create_session() as session:
         service = BinanceExchangeService(session)
         exchange = service.refresh_exchange()
-    
+
         SetupService.setUpExchange(session=session, exchange_code=exchange.code)

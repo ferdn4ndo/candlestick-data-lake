@@ -1,54 +1,66 @@
 import base64
 import os
+import tornado
+
+from functools import wraps
+from typing import List
 
 from unittest import expectedFailure
 
 from app import BASIC_AUTH_PASSWORD, BASIC_AUTH_USERNAME
 
+from tornado.web import RequestHandler
 
-def validate_credentials(username: str, password: str) -> bool:
-    expected_username = BASIC_AUTH_USERNAME
-    expected_password = BASIC_AUTH_PASSWORD
+
+class BasicAuthService:
+
+    def __init__(self, request: RequestHandler) -> None:
+        self.request = request
+        self.expected_username = BASIC_AUTH_USERNAME
+        self.expected_password = BASIC_AUTH_PASSWORD
+
+    def send_auth_challenge(self):
+        hdr = 'Basic realm=Restricted'
+        self.request.set_status(401)
+        self.request.set_header('www-authenticate', hdr)
+        self.request.write({"message": "Invalid credentials. Please check your Authorization headers and try again."})
+        self.request.finish()
+        return False
+
+    def authenticate_user(self) -> bool:
+        print('foo')
+        auth_header = self.request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Basic '):
+            raise self.SendChallenge()
+
+        auth_data = auth_header.split(None, 1)[-1]
+        auth_data = base64.b64decode(auth_data).decode('ascii')
+        username, password = auth_data.split(':', 1)
+
+        return self.validate_credentials(username, password)
     
-    return username == expected_username and password == expected_password
+    def validate_credentials(self, username: str, password: str) -> bool:
+        return username == self.expected_username and password == self.expected_password
 
 
-def require_basic_auth(handler_class):
-    # Should return the new _execute function, one which enforces authentication and only calls the inner handler's
-    # _execute() if it's present.
-    def wrap_execute(handler_execute):
-        # I've pulled this out just for clarity, but you could stick it in _execute if you wanted. It returns True if
-        # credentials were provided and are valid.
-        def require_basic_auth(handler, kwargs):
-            auth_header = handler.request.headers.get('Authorization')
-            if auth_header is None or not auth_header.startswith('Basic '):
-                # If the browser didn't send us authorization headers, send back a response letting it know that we'd
-                # like a username and password (the "Basic" authentication method). Without this, even if you visit
-                # put a username and password in the URL, the browser won't send it. The "realm" option in the header
-                # is the name that appears in the dialog that pops up in your browser.
-                handler.set_status(401)
-                handler.set_header('WWW-Authenticate', 'Basic realm=Restricted')
-                handler._transforms = []
-                handler.finish()
-                
-                return False
-            # The information that the browser sends is base64-encoded, and in the format "username:password".Keep in
-            # mind that either username or password could still be unset.
-            auth_decoded = base64.decodestring(auth_header[6:])
-            username, password = auth_decoded.split(':', 2)
+def auth_required(handler_class: RequestHandler):
+    '''Decorator that protect methods with HTTP authentication.'''
+    def decorator(func):
+        #### STILL NOT WORKING - HANGING AFTER NEXT LINE
+        print('qqq')
+        @tornado.gen.coroutine
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            print('wwww')
+            service = BasicAuthService(request=handler_class)
             
-            return validate_credentials(username=username, password=password)
+            if service.authenticate_user():
+                print('aaaa')
+                result = yield func(*args, **kwargs)
+            else:
+                print('bbbb')
+                result = service.send_auth_challenge()
 
-        # Since we're going to attach this to a RequestHandler class, the first argument will wind up being a reference
-        # to an instance of that class.
-        def _execute(self, transforms, *args, **kwargs):
-            if not require_basic_auth(self, kwargs):
-                return False
-            
-            return handler_execute(self, transforms, *args, **kwargs)
-
-        return _execute
-
-    handler_class._execute = wrap_execute(handler_class._execute)
-    
-    return handler_class
+            print(result)
+        return wrapper
+    return decorator

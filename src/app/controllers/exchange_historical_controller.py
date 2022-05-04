@@ -1,7 +1,6 @@
 from datetime import datetime
 import json
 import logging
-from app.services.auth_service import require_basic_auth
 
 from tornado import gen
 from tornado.ioloop import IOLoop
@@ -20,7 +19,6 @@ from app.services.database_service import DatabaseService
 from app.services.exchanges.exchange_service_factory import create_exchange_service_from_id, get_exchange_by_id
 
 
-@require_basic_auth
 class ExchangeHistoricalListController(BaseController):
     def get(self) -> None:
         self.write(
@@ -81,7 +79,6 @@ class ExchangeHistoricalListController(BaseController):
         self.write({"message": f"Successfully started fetching data from '{exchange_code}' for symbol '{symbol}'."})
 
 
-@require_basic_auth
 class ExchangeHistoricalSingleController(BaseController):
     def get(self) -> None:
         self.write(
