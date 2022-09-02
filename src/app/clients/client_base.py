@@ -1,8 +1,4 @@
-import functools
 from abc import ABC, abstractmethod
-from collections import Callable
-
-from tornado.ioloop import IOLoop
 
 
 class ClientBase(ABC):
