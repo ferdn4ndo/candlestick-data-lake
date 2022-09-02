@@ -3,20 +3,18 @@ import json
 import logging
 
 from tornado import gen
-from tornado.ioloop import IOLoop
 from tornado import concurrent
 
 from app.controllers.base_controller import BaseController
 from app.errors import ResourceAlreadyInUseError
 from app.services.consumer_service import ConsumerService
 from app.services.consumer_service_factory import (
-    create_consumer_service_from_exchange,
     create_client_from_exchange_code,
     create_service_from_exchange_code,
 )
 from app.services.currency_pair.currency_pair_service import CurrencyPairService
 from app.services.database_service import DatabaseService
-from app.services.exchanges.exchange_service_factory import create_exchange_service_from_id, get_exchange_by_id
+from app.services.exchanges.exchange_service_factory import get_exchange_by_id
 
 
 class ExchangeHistoricalListController(BaseController):

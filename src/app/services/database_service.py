@@ -1,5 +1,3 @@
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
@@ -93,7 +91,6 @@ class DatabaseService:
             with self.session.begin_nested():
                 self.session.flush()
         except IntegrityError:
-            print("maoe")
             self.session.rollback()
 
             query = self.session.query(model).filter_by(**lookup)

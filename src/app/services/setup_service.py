@@ -3,7 +3,6 @@ import logging
 from sqlalchemy.orm import Session
 
 from app.services.consumer_service_factory import create_client_from_exchange_code, create_service_from_exchange_code
-from app.services.database_service import DatabaseService
 from app.services.exchanges.exchange_service_factory import get_exchange_by_code
 
 

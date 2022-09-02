@@ -2,18 +2,8 @@ import logging
 
 from app.clients.client_exception import ClientException
 from app.controllers.base_controller import BaseController
-from app.errors.model_already_exists_error import ModelAlreadyExistsError
-from app.errors.resource_not_found_error import ResourceNotFoundError
-from app.models import Exchange
-from app.services.consumer_service_factory import create_client_from_exchange_code, create_service_from_exchange_code
 from app.services.database_service import DatabaseService
-from app.services.exchanges.exchange_service_factory import (
-    ALLOWED_EXCHANGE_CODES,
-    create_exchange_service_from_code,
-    get_exchange_by_id,
-    serialize_existing_exchanges,
-    create_exchange_service_from_model,
-)
+from app.services.exchanges.exchange_service_factory import get_exchange_by_id
 from app.services.setup_service import SetupService
 
 

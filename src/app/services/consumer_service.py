@@ -1,6 +1,4 @@
-import asyncio
 import datetime
-import functools
 import logging
 
 from sqlalchemy.orm import Session
@@ -8,13 +6,11 @@ from tornado import gen
 
 from app.clients.client_base import ClientBase
 from app.clients.client_exception import ClientException
-from app.errors import ResourceAlreadyInUseError, ClientIntegrationError
+from app.errors import ClientIntegrationError
 from app.models import CurrencyPair, Exchange
-from app.services.currency_pair.currency_pair_factory import get_exchange_currency_pair_from_symbol
 from app.services.currency_pair.currency_pair_service import CurrencyPairService
 from app.services.database_service import DatabaseService
 from app.services.exchanges.exchange_service_base import ExchangeServiceBase
-from app.services.exchanges.exchange_service_factory import create_exchange_service_from_code
 
 
 class ConsumerService:

@@ -1,13 +1,10 @@
 import logging
 
-from app.clients.binance.binance_client import BinanceClient
 from app.errors import ResourceNotFoundError, ResourceAlreadyInUseError
 from app.services import DatabaseService
 from app.services.consumer_service import ConsumerService
 from app.services.consumer_service_factory import create_client_from_exchange_code, create_service_from_exchange_code
 from app.services.currency_pair.currency_pair_service import CurrencyPairService
-from app.services.exchanges.binance_exchange_service import BinanceExchangeService
-from sqlalchemy.orm import Session
 
 from app.services.exchanges.exchange_service_factory import get_exchange_by_code
 

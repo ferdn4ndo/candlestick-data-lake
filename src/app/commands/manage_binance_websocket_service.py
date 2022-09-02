@@ -19,7 +19,7 @@ def execute(arguments: list) -> None:
     if operation == "add_pair":
         binance_websocket_service.register_pair(pairs)
     else:
-        print(f"The operation '${operation}' is not supported!")
+        print(f"The operation '{operation}' is not supported!")
 
 
 def add_websocket_pairs(pairs: list) -> None:

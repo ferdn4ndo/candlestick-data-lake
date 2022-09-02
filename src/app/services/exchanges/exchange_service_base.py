@@ -15,7 +15,6 @@ class ExchangeServiceBase(ABC):
         self.exchange = exchange
 
     def add_exchange(self) -> Exchange:
-
         logging.info(f"Creating exchange using code '{self.EXCHANGE_CODE}'")
 
         with DatabaseService.create_session() as session:
