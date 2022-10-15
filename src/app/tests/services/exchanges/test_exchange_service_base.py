@@ -2,18 +2,16 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from app.models import Candlestick, Currency, CurrencyPair, Exchange
-from app.services.exchanges.binance_exchange_service import BinanceExchangeService
 from app.services.exchanges.exchange_service_base import ExchangeServiceBase
 from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy_get_or_create import update_or_create
 
 
 class TestExchangeServiceBase(unittest.TestCase):
     def setUp(self):
         self.session = Session()
-        self.service = ExchangeServiceBase(self.session)
+        self.service = ExchangeServiceBase()
 
-    def test__init__(self) -> None:
+    def test___init__(self) -> None:
         self.assertEqual(self.session, self.service.database.session)
 
     @patch("app.services.database_service.DatabaseService.update_or_create")
@@ -94,3 +92,7 @@ class TestExchangeServiceBase(unittest.TestCase):
             },
         )
         self.assertEqual(candlestick, response)
+
+    @patch("app.services.database_service.DatabaseService.update_or_create")
+    def test_get_currency_pair(self, mock_update_or_create: MagicMock) -> None:
+        pass

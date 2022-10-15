@@ -1,11 +1,10 @@
 import glob
+import importlib
 import os
 import sys
 
-import importlib
 
-
-def get_commands_list():
+def get_commands_list() -> list:
     scripts = []
     ignored_files = ["__init__.py"]
     for file in glob.glob(os.path.join(sys.path[0], "commands", "*.py")):
@@ -15,7 +14,7 @@ def get_commands_list():
     return scripts
 
 
-def run_script():
+def run_script() -> None:
     available_commands = get_commands_list()
     sys.argv.pop(0)  # Removes the 'manage.py' argument
 
@@ -34,7 +33,7 @@ def run_script():
     command_module = importlib.import_module("app.commands.{}".format(command))
 
     if not hasattr(command_module, "execute") or not hasattr(command_module, "show_help"):
-        raise TypeError("The command script must have the methods 'execute' and 'show help'")
+        raise TypeError("The command script must have the methods 'execute' and 'show_help'")
 
     if len(sys.argv) > 1 and sys.argv[1] == "--help":
         print("Help for command {}:".format(command))

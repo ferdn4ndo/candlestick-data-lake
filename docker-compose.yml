@@ -6,6 +6,8 @@ services:
     image: mariadb:10.5.9
     env_file:
       - .env
+    ports:
+      - "3306:3306"
     volumes:
       - csdl-db-volume:/var/lib/mysql
     command: mysqld --default-authentication-plugin=mysql_native_password
@@ -28,4 +30,4 @@ services:
     tty: true
 
 volumes:
-    csdl-db-volume:
+  csdl-db-volume:
