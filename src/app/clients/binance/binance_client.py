@@ -5,7 +5,6 @@ from app.clients.client_base import ClientBase
 
 
 class BinanceClient(ClientBase):
-
     URL_BASE = "https://api.binance.com/api/v3"  # https://binance-docs.github.io/apidocs/spot/en/
 
     PATH_EXCHANGE_INFO = "/exchangeInfo"  # https://binance-docs.github.io/apidocs/spot/en/#exchange-information

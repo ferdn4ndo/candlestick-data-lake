@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class ClientBase(ABC):
-
     fetching_symbols = []
 
     @abstractmethod
