@@ -2,7 +2,7 @@ import base64
 import os
 import tornado
 
-from functools import wraps
+import functools
 from typing import List
 
 from unittest import expectedFailure
@@ -45,12 +45,11 @@ class BasicAuthService:
 def auth_required(handler_class: RequestHandler):
     """Decorator that protect methods with HTTP authentication."""
 
-    def decorator(func):
+    def decorator(func, **kwargs):
         #### STILL NOT WORKING - HANGING AFTER NEXT LINE
         print("qqq")
 
-        @tornado.gen.coroutine
-        @wraps(func)
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
             print("wwww")
             service = BasicAuthService(request=handler_class)
