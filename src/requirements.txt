@@ -4,5 +4,5 @@ python-binance==1.0.15
 requests==2.25.1
 SQLAlchemy==1.4.1
 sqlalchemy-get-or-create==0.1.5
-tornado==6.1
+tornado==6.4.1
 tornado-sqlalchemy==0.7.0
