@@ -44,7 +44,13 @@ For a single container run (that will expose port `8888` by default):
 
 ```
 # Assuming .env file is at the current location
-docker run -d --rm -e 8888 -v ./src/app:/usr/src/app --env-file ./env "$CONTAINER_NAME":local
+docker run -d --rm \
+  --name csdl-app-run \
+  --expose 8888 \
+  -p 127.0.0.1:8888:8888/tcp \
+  -v ./src/app:/usr/src/app \
+  --env-file .env \
+  candlestick-data-lake
 ```
 
 Docker-compose version (will build and run):
