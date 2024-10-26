@@ -1,4 +1,4 @@
-FROM python:3.9.1-alpine
+FROM python:3.13.0-slim
 
 WORKDIR /usr/src
 
@@ -6,13 +6,13 @@ EXPOSE 8888
 
 RUN mkdir ./app
 
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
         curl \
-        mariadb-dev \
-        build-base \
-        linux-headers \
-        libffi-dev
-
+        libmariadb-dev \
+        build-essential \
+        linux-headers-generic \
+        libffi-dev \
+        && rm -rf /var/lib/apt/lists/*
 COPY ./src/requirements.txt .
 COPY ./src/requirements.dev.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
