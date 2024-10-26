@@ -9,6 +9,11 @@ services:
     volumes:
       - csdl-db-volume:/var/lib/mysql
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
     container_name: csdl-app
@@ -18,11 +23,13 @@ services:
       - .env
     ports:
       - "8888:8888"
+      - "5678:5678"
     volumes:
       - ./src/app:/usr/src/app
     command: "/usr/src/entrypoint.dev.sh"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     stdin_open: true
     tty: true
 
